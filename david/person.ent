@@ -1,0 +1,51 @@
+
+WebApp Konferencije[
+
+  class +db konferencije_ias{
+
+  entity Konferencija !m {
+    $key (idKonferencije)idKonferencija =
+    naziv =
+    opis =
+    rang <idRang>
+    #links[
+      ->nazivRang*
+    ]
+    #dal[
+     dal nesto
+    ]
+    #paths[
+     %c  Rang
+     %d  DAL
+     %d  RangDAL
+    ]
+    #actions[
+     @konferencije : All
+     @konferencija : Read
+     @konferencijepretraga : !PrikaziKonferencijePretraga
+    ]
+  }
+
+  entity Rang {
+    $key (idRang)idRang =
+    nazivRang =
+    #paths[
+      %c InterfaceFieldValidator
+      %c inputFormaterCustom
+      %d DAL
+      %d CommonDatabaseMethods
+    ]
+    #actions[
+     @rangovi : All
+     @rang : Read
+     @rangpretraga : !RangPretaraga
+    ]
+  }
+
+
+
+  }
+
+
+
+]

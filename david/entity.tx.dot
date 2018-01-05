@@ -1,0 +1,63 @@
+
+    digraph xtext {
+    fontname = "Bitstream Vera Sans"
+    fontsize = 8
+    node[
+        shape=record,
+        style=filled,
+        fillcolor=aliceblue
+    ]
+    nodesep = 0.3
+    edge[dir=black,arrowtail=empty]
+
+
+48801208 -> 48801680[arrowtail=diamond, dir=both, headlabel="entities 1..*"]
+48801208 -> 48802152[arrowtail=diamond, dir=both, headlabel="services 0..*"]
+48801208[ label="{EntityModel|+name:ID\l}"]
+
+48801680 -> 49086512[arrowtail=diamond, dir=both, headlabel="impls 1..*"]
+48801680 -> 49086984[arrowtail=diamond, dir=both, headlabel="properties 1..*"]
+48801680 -> 49087456[arrowtail=diamond, dir=both, headlabel="requires 1..*"]
+48801680[ label="{Entity|+name:ID\l+implements:STRING\l}"]
+
+48802152 -> 49086512[arrowtail=diamond, dir=both, headlabel="impls 1..*"]
+48802152 -> 48803096[arrowtail=diamond, dir=both, headlabel="injections 0..*"]
+48802152 -> 48802624[arrowtail=diamond, dir=both, headlabel="methods 0..*"]
+48802152 -> 49087456[arrowtail=diamond, dir=both, headlabel="requires 1..*"]
+48802152[ label="{Service|+name:ID\l+implements:STRING\l}"]
+
+48802624[ label="{Method|+pronadji:STRING\l+addone:STRING\l+delete:STRING\l+editone:STRING\l}"]
+
+48803096 -> 48801680[headlabel="entity "]
+48803096[ label="{ServInjection|}"]
+
+49086512[ label="{Implement|+name:ID\l+multi:STRING\l}"]
+
+49086984[ label="{Property|+name:ID\l+valid:ID\l+value:BASETYPE\l+initvalue:STRING\l+initstr:ID\l+initint:INT\l}"]
+
+49087456[ label="{Require|+name:ID\l}"]
+
+49087928[ label="{Comment|\\/\\/.*$}"]
+
+48781200[ label="{ID|}"]
+
+48781672[ label="{STRING|}"]
+
+48782144[ label="{BOOL|}"]
+
+48782616[ label="{INT|}"]
+
+48799792[ label="{FLOAT|}"]
+
+48800264[ label="{NUMBER|}"]
+48800264 -> 48799792 [dir=back]
+48800264 -> 48782616 [dir=back]
+
+48800736[ label="{BASETYPE|}"]
+48800736 -> 48800264 [dir=back]
+48800736 -> 48782144 [dir=back]
+48800736 -> 48781200 [dir=back]
+48800736 -> 48781672 [dir=back]
+
+
+}

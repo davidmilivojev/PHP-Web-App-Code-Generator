@@ -1,0 +1,4 @@
+<form name="trazi" method="GET" action="index{% for ent in entity.entities %}{% if ent.main %}{{ent.name}}{% endif %}{% endfor %}.php">
+  <input type="text" name="search">
+  <input type="submit" value="Pretraga">
+</form>

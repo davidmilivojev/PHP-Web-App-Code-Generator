@@ -1,0 +1,155 @@
+<?php
+require_once '../lib/class/{{entity.name}}.php';
+{% for ent in entity.services %}
+{% for reqs in ent.paths %}
+  {% if reqs.pathdal %}
+require_once '../lib/DAL/{{reqs.name}}.php';
+  {% endif %}
+{% endfor %}
+{% endfor %}
+
+class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
+{
+  function __construct() {
+
+      parent::__construct();
+  }
+
+
+
+  function {% for ser in entity.services %}{% for ap in ser.actions %}{% if ap.meths.custom %}{{ap.meths.name}}{% endif %}{% endfor %}{% endfor %}($search){
+    $results = $this->IzvrsiUpit($sqlQuery,$params);
+
+    ${{entity.name|lower}}Results = array();
+
+    foreach ($results as $k)
+    {
+        ${{entity.name|lower}}Result = new {{entity.name}}();
+        {% for property in entity.properties %}
+        {% if property.key %}
+        ${{entity.name|lower}}Result->set_{{property.name}}($k->{% if property.key %}{{property.name}}{% endif %});
+        {% endif %}
+        {% endfor %}
+        {% for property in entity.properties %}
+        {% if not property.key and not property.addlink %}
+        ${{entity.name|lower}}Result->set_{{property.name}}($k->{{property.name|capitalize}});
+        {% endif %}
+        {% endfor %}
+
+        {% for property in entity.properties %}
+        {% if property.addlink %}
+        ${{property.name}}DAL = new {{property.name|capitalize}}DAL();
+        ${{entity.name|lower}}Result->set_{{property.name}}(${{property.name}}DAL->GetOne($k->{{property.name|capitalize}}));
+        {% endif %}
+        {% endfor %}
+        ${{entity.name|lower}}Results[] = ${{entity.name|lower}}Result;
+    }
+
+    return ${{entity.name|lower}}Results;
+
+  }
+
+
+
+  public function AddOne($object) {
+
+    $object->ValidateFields();
+
+    $sqlQuery="INSERT INTO {{entity.name}}({% for property in entity.properties %}{% if not property.key %}{{property.name|capitalize}}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %}) VALUES({% for property in entity.properties %}{% if not property.key %}:{{property.name}}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %})";
+    $params = array({% for property in entity.properties %}{% if not property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% if property.linkid %}->get_{{property.linkid}}(){% endif %}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %});
+    return $this->IzvrsiUpit($sqlQuery, $params);
+
+  }
+
+  public function DeleteOne($object){
+
+    $object->ValidateFields();
+    $sqlQuery="DELETE FROM {{entity.name}} WHERE {% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %} = :{% for property in entity.properties %}{% if property.plural %}{{property.plural}}{% endif %}{% endfor %}";
+    $params = array(":{% for property in entity.properties %}{% if property.plural %}{{property.plural}}{% endif %}{% endfor %}"=>$object->get_{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}());
+    return $this->IzvrsiUpit($sqlQuery, $params);
+
+  }
+
+  public function EditOne($object){
+    $object->ValidateFields();
+
+    $sqlQuery="UPDATE {{entity.name}} SET {% for property in entity.properties %}{% if not property.key %}{{property.name|capitalize}} = :{{property.name}}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %} WHERE {% for property in entity.properties %}{% if property.key %}{{property.name}} = :{{property.name}}{% endif %}{% endfor %}";
+    $params = array({% for property in entity.properties %}{% if not property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% if property.linkid %}->get_{{property.linkid}}(){% endif %}{% else %}{% if property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% endif %}{% endif %}{% if not loop.last %},{% endif %}{% endfor %});
+    return $this->IzvrsiUpit($sqlQuery, $params);
+  }
+
+  public function GetAll(){
+
+    $sqlQuery="SELECT * FROM {{entity.name}}";
+    $params = array();
+    $results = $this->IzvrsiUpit($sqlQuery,$params);
+
+    ${{entity.name|lower}}Results = array();
+
+    foreach ($results as $k)
+    {
+        ${{entity.name|lower}}Result = new {{entity.name}}();
+        {% for property in entity.properties %}
+        {% if property.key %}
+        ${{entity.name|lower}}Result->set_{{property.name}}($k->{% if property.key %}{{property.name}}{% endif %});
+        {% endif %}
+        {% endfor %}
+        {% for property in entity.properties %}
+        {% if not property.key and not property.addlink %}
+        ${{entity.name|lower}}Result->set_{{property.name}}($k->{{property.name|capitalize}});
+        {% endif %}
+        {% endfor %}
+
+        {% for property in entity.properties %}
+        {% if property.addlink %}
+        ${{property.name}}DAL = new {{property.name|capitalize}}DAL();
+        ${{entity.name|lower}}Result->set_{{property.name}}(${{property.name}}DAL->GetOne($k->{{property.name|capitalize}}));
+        {% endif %}
+        {% endfor %}
+        ${{entity.name|lower}}Results[] = ${{entity.name|lower}}Result;
+    }
+
+    return ${{entity.name|lower}}Results;
+
+  }
+
+  public function GetOne($object){
+
+    ${{entity.name|lower}}Result = new {{entity.name|capitalize}}();
+    ${{entity.name|lower}}Result->set_{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}($object);
+
+    $sqlQuery="SELECT * FROM {{entity.name}} WHERE {% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %} = :{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}";
+    $params = array(":{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}" =>${{entity.name|lower}}Result->get_{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}());
+
+    $results = $this->IzvrsiUpit($sqlQuery,$params);
+    if (count($results)>0)
+    {
+        $k = $results[0];
+
+        ${{entity.name|lower}}Result = new {{entity.name}}();
+        {% for property in entity.properties %}
+        {% if property.key %}
+        ${{entity.name|lower}}Result->set_{{property.name}}($k->{{property.name}});
+        {% endif %}
+        {% endfor %}
+        {% for property in entity.properties %}
+        {% if not property.key and not property.addlink %}
+        ${{entity.name|lower}}Result->set_{{property.name}}($k->{{property.name|capitalize}});
+        {% endif %}
+        {% endfor %}
+
+        {% for property in entity.properties %}
+        {% if property.addlink %}
+        ${{property.name}}DAL = new {{property.name|capitalize}}DAL();
+        ${{entity.name|lower}}Result->set_{{property.name}}(${{property.name}}DAL->GetOne($k->{{property.name|capitalize}}));
+        {% endif %}
+        {% endfor %}
+    }
+
+    return ${{entity.name|lower}}Result;
+
+  }
+
+}
+
+?>

@@ -1,0 +1,104 @@
+<?php
+
+ 	require_once "Rest.php";
+        {% for entity in ent.entities %}
+        require_once '../lib/DAL/{{entity.name}}DAL.php';
+        {% endfor %}
+        //need to add
+        //require_once '../lib/DAL/KorisnikDAL.php';
+
+
+	class API extends REST
+        {
+
+            public function __construct() {
+                parent::__construct();
+            }
+
+            public function processApi() {
+                $func = strtolower(trim(str_replace("/", "", $_REQUEST['x'])));
+                if ((int) method_exists($this, $func) > 0)
+                    $this->$func();
+                else
+                    $this->response('false', 404);
+            }
+
+            public function json($data) {
+                if (is_array($data)) {
+                    return json_encode($data);
+                }
+            }
+
+
+            {% for enty in ent.entities %}
+            {% for ser in enty.services %}
+            {% for ap in ser.actions %}
+            {% if ap.meths.ga %}
+
+            private function {{ap.name}}() {
+
+                if ($this->get_request_method() != "GET")
+                    $this->response('false', 406);
+
+                ${{enty.name|lower}}DAL = new {{enty.name}}DAL();
+                ${{ap.name}} = ${{enty.name|lower}}DAL->{% if ap.meths.ga %}GetAll{% endif %}();
+                $this->response($this->json(${{ap.name}}), 200);
+            }
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            {% endfor %}
+
+            {% for enty in ent.entities %}
+            {% for ser in enty.services %}
+            {% for ap in ser.actions %}
+            {% if ap.meths.custom %}
+
+            private function {{ap.name}}() {
+
+                if ($this->get_request_method() != "GET")
+                    $this->response('false', 406);
+
+                $search = (string) $this->_request['search'];
+                ${{enty.name|lower}}DAL = new {{enty.name}}DAL();
+                ${{ap.name}} = ${{enty.name|lower}}DAL->{% if ap.meths.custom %}{{ap.meths.name}}{% endif %}($search);
+                $this->response($this->json(${{ap.name}}), 200);
+            }
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            {% endfor %}
+
+            {% for enty in ent.entities %}
+            {% for ser in enty.services %}
+            {% for ap in ser.actions %}
+            {% if ap.meths.go %}
+            private function {{ap.name}}() {
+
+                if ($this->get_request_method() != "GET") {
+                    $this->response('false', 406);
+                }
+
+                ${% for prop in enty.properties %}{{prop.plural}}{% endfor %} = (int) $this->_request['{% for prop in enty.properties %}{{prop.plural}}{% endfor %}'];
+                if (${% for prop in enty.properties %}{{prop.plural}}{% endfor %} > 0) {
+                    ${{enty.name|lower}}DAL = new {{enty.name}}DAL();
+                    ${{enty.name|lower}} = ${{enty.name|lower}}DAL->{% if ap.meths.go %}GetOne{% endif %}(${% for prop in enty.properties %}{{prop.plural}}{% endfor %});
+                    $result = array();
+                    array_push($result, ${{enty.name|lower}});
+                    $this->response($this->json($result), 200);
+                }
+                $this->response('false', 204);
+            }
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            {% endfor %}
+
+
+          }
+
+
+
+	$api = new API;
+	$api->processApi();
+?>

@@ -1,0 +1,73 @@
+
+<?php
+{% for ent in entity.services %}
+{% for reqs in ent.paths %}
+  {% if reqs.pathclass %}
+require_once '{{reqs.name}}.php';
+  {% endif %}
+{% endfor %}
+{% endfor %}
+
+class {{entity.name}} implements JsonSerializable, FieldValidator {
+
+  {% for property in entity.properties %}
+  {% if property.init %}
+  {% if not property.key and not property.initStr %}
+  protected  $_{{property.name}}="";
+  {% endif %}
+  {% if property.key %}
+  protected  $_{{property.name}}=0;
+  {% endif %}
+  {% if property.initStr %}
+  protected  $_{{property.name}}="{{property.initStr}}";
+  {% endif %}
+  {% else %}
+  protected  $_{{property.name}};
+  {% endif %}
+  {% endfor %}
+
+  function __construct() {
+  }
+
+  {% for property in entity.properties %}
+  function get_{{property.name}}(){
+    return $this->_{{property.name}};
+  }
+
+  function set_{{property.name}}($_{{property.name}}){
+    $this->_{{property.name}} = $_{{property.name}};
+  }
+
+  {% endfor %}
+
+  public function jsonSerialize() {
+    return (object) get_object_vars($this);
+  }
+
+  public function jsonDeserialize($data) {
+    {% for property in entity.properties %}
+    {% if property.addlink %}
+    ${{property.name}}= new {{property.name | capitalize}}();
+    ${{property.name}}->jsonDeserialize($data->{'_{{property.name}}'});
+    $this->_{{property.name}} = ${{property.name}};
+    {% else %}
+    $this->_{{property.name}} = $data->{'_{{property.name}}'};
+    {% endif %}
+    {% endfor %}
+  }
+
+  public function ValidateFields()
+  {
+    {% for property in entity.properties %}
+      {% if property.addlink %}
+      if ($this->_{{property.name}}!=NULL) $this->_{{property.name}}->ValidateFields();
+      {% else %}
+      $this->_{{property.name}} = formatInput($this->_{{property.name}});
+      {% endif %}
+    {% endfor %}
+
+  }
+
+}
+
+?>

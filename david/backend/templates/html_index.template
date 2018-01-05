@@ -1,0 +1,80 @@
+<?php
+require_once '/lib/class/{{entity.name}}.php';
+
+$targetURL;
+if (!empty($_GET["search"])) $targetURL = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.custom %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}/?search=".$_GET["search"];
+else $targetURL = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}";
+
+$curl = curl_init($targetURL);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($curl);
+$data = json_decode($response);
+
+${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name}}{% endif %}{% endfor %}{% endfor %} = array();
+
+for ($i=0; $i<=count($data)-1;$i++)
+{
+    ${{entity.name|lower}} = new {{entity.name|capitalize}}();
+    ${{entity.name|lower}}->jsonDeserialize($data[$i]);
+    array_push(${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}, ${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %});
+}
+?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>david</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+      <header>
+        <div class="wrapper">
+          <nav class="menu">
+            <!-- <ul>
+              <li>Home</li>
+              <li>List</li>
+              <li>User</li>
+              <li>Login</li>
+              <li>Logout</li>
+            </ul> -->
+            <?php  require_once "parts/mainmenu.php"; ?>
+          </nav>
+          <div class="search">
+            <?php include('side_menu.php'); ?>
+          </div>
+          <div class="clr"></div>
+        </div>
+      </header>
+    <img class="banner" src="images/banner.svg" alt="">
+    <h1>Lista {{entity.name}}</h1>
+    <div class="wrapper">
+      <div class="content">
+        	<?php foreach(${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name}}{% endif %}{% endfor %}{% endfor %} as $k): ?>
+            <div class="index-items">
+              <div class="index-item-header">
+              </div>
+              {% for ent in entity.properties %}
+              {% if not ent.key and not ent.addlink  %}
+              <h2>{{ent.name|capitalize}}: <?php echo $k->get_{{ent.name}}(); ?></h2>
+              {% endif %}
+              {% endfor %}
+              {% for enty in entity.services %}
+              {% for cb in enty.links %}
+              {% if cb.by %}
+              <p>{% for ent in entity.properties %}{% if ent.addlink %}{{ent.name|capitalize}}{% endif %}{% endfor %}: <?php echo $k->get_{% for ent in entity.properties %}{% if ent.addlink %}{{ent.name}}{% endif %}{% endfor %}()->get_{{cb.name}}(); ?></p>
+              {% endif %}
+              {% endfor %}
+              {% endfor %}
+            </div>
+          <?php endforeach; ?>
+      </div>
+    </div>
+    <div class="footer-top">
+    </div>
+    <footer>
+      <div class="wrapper">
+        <p>Design by: David Milivojev</p>
+      </div>
+    </footer>
+  </body>
+</html>
