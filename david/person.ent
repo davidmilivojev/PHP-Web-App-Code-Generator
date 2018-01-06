@@ -5,7 +5,7 @@ WebApp Konferencije[
 
   entity Konferencija !m {
     $key (idKonferencije)idKonferencija =
-    naziv =
+    ^ naziv =
     opis =
     rang <idRang>
     #links[
@@ -23,12 +23,15 @@ WebApp Konferencije[
      @konferencije : All
      @konferencija : Read
      @konferencijepretraga : !PrikaziKonferencijePretraga
+     @izbrisikonferenciju : Delete
+     @izmenikonferenciju : Edit
+     @dodajkonferenciju : Create
     ]
   }
 
   entity Rang {
     $key (idRang)idRang =
-    nazivRang =
+    ^ nazivRang =
     #paths[
       %c InterfaceFieldValidator
       %c inputFormaterCustom
@@ -39,6 +42,7 @@ WebApp Konferencije[
      @rangovi : All
      @rang : Read
      @rangpretraga : !RangPretaraga
+     @izbrisirang : Delete
     ]
   }
 

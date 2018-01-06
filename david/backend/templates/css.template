@@ -200,7 +200,7 @@ form[alt="delete"]{
   max-width: 600px;
 }
 
-input[value="Obriši"],
+input[value="Obrisi"],
 input[value="Izmeni"]{
   /*width: 100px;*/
   background: #54dd96;
@@ -209,7 +209,7 @@ input[value="Izmeni"]{
   border: 1px solid #404040;
 }
 
-input[value="Obriši"]{
+input[value="Obrisi"]{
   background: white;
   color: black;
   border: 1px solid #404040;

@@ -9,8 +9,9 @@
             echo "<li class=\"dropdown\">";
             echo "<a href=\"#\">Administracija</a>";
             echo "<ul class=\"dropdown-content\">";
-            echo "<li><a href=\"list.php\"> Konferencije </a></li>";
-            echo "<li><a href=\"event.php\"> Predavanja </a></li>";
+            {% for page in entity.entities %}
+            echo "<li><a href=\"controlPanel{{page.name|capitalize}}.php\">{{page.name|capitalize}}</a></li>";
+            {% endfor %}
             echo "</ul>";
             echo "<li><a href=\"user.php\">";
             echo $_SESSION["username"];
