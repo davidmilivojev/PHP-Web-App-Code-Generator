@@ -13,6 +13,7 @@ from backend.css_style import css_style
 from backend.htaccess import htaccess
 from backend.xml_config import xml_config
 from backend.svg_picture import svg_picture
+from backend.php_createdb import php_createdb
 from backend.php_validatorFormater import php_validatorFormater
 from backend.php_validator import php_validator
 from backend.php_utility import php_utility
@@ -27,7 +28,8 @@ from backend.php_api import php_api
 from backend.html_index import html_index
 from backend.html_delete import html_delete
 from backend.html_controlpanel import html_controlpanel
-
+from backend.html_create import html_create
+from backend.html_edit import html_edit
 
 
 
@@ -39,6 +41,7 @@ def main(debug=False):
     htaccess(this_folder, debug)
     xml_config(this_folder, debug)
     php_class(this_folder, debug)
+    php_createdb(this_folder, debug)
     php_validatorFormater(this_folder, debug)
     php_validator(this_folder, debug)
     php_utility(this_folder, debug)
@@ -53,6 +56,8 @@ def main(debug=False):
     html_index(this_folder, debug)
     html_delete(this_folder, debug)
     html_controlpanel(this_folder, debug)
+    html_create(this_folder, debug)
+    html_edit(this_folder, debug)
 
 
 if __name__ == "__main__":

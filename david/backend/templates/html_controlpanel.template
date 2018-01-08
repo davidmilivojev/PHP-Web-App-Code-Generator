@@ -6,17 +6,17 @@ if (!isset($_SESSION["username"])) header('Location: index{{entity.name}}.php');
 
 require_once '/lib/class/{{entity.name}}.php';
 
-$curl = curl_init('http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}');
+$curl = curl_init('http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga and not prop.linkmethod %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}');
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($curl);
 $data = json_decode($response);
-${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} = array();
+${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga and not prop.linkmethod %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} = array();
 
 for ($i=0; $i<=count($data)-1;$i++)
 {
     ${{entity.name|lower}} = new {{entity.name|capitalize}}();
     ${{entity.name|lower}}->jsonDeserialize($data[$i]);
-    array_push(${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}, ${{entity.name|lower}});
+    array_push(${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga and not prop.linkmethod %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}, ${{entity.name|lower}});
 }
 ?>
 <!DOCTYPE html>
@@ -50,7 +50,7 @@ for ($i=0; $i<=count($data)-1;$i++)
     <div class="wrapper">
       <div class="content">
         <h4 class="create-konf"><a href="create{{entity.name}}.php">Kreiranje {{entity.name}}</a></h4>
-        <?php foreach(${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} as $k): ?>
+        <?php foreach(${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga and not prop.linkmethod %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} as $k): ?>
           <div class="access-items">
             <h2 class="access-title control">
             {% for ent in entity.properties %}

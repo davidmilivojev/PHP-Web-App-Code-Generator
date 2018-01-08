@@ -1,5 +1,6 @@
 <?php
 require_once '../lib/class/{{entity.name}}.php';
+require_once '../lib/DAL/DAL.php';
 {% for ent in entity.services %}
 {% for reqs in ent.paths %}
   {% if reqs.pathdal %}
@@ -17,7 +18,7 @@ class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
 
 
 
-  function {% for ser in entity.services %}{% for ap in ser.actions %}{% if ap.meths.custom %}{{ap.meths.name}}{% endif %}{% endfor %}{% endfor %}($search){
+  function {% for ser in entity.services %}{% for ap in ser.actions %}{% if ap.meths.custom and not ap.linkmethod %}{{ap.meths.name}}{% endif %}{% endfor %}{% endfor %}($search){
     $results = $this->IzvrsiUpit($sqlQuery,$params);
 
     ${{entity.name|lower}}Results = array();
@@ -56,7 +57,7 @@ class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
     $object->ValidateFields();
 
     $sqlQuery="INSERT INTO {{entity.name}}({% for property in entity.properties %}{% if not property.key %}{{property.name|capitalize}}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %}) VALUES({% for property in entity.properties %}{% if not property.key %}:{{property.name}}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %})";
-    $params = array({% for property in entity.properties %}{% if not property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% if property.linkid %}->get_{{property.linkid}}(){% endif %}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %});
+    $params = array({% for property in entity.properties %}{% if not property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% if property.linkid %}->get_{{property.linkid.name}}(){% endif %}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %});
     return $this->IzvrsiUpit($sqlQuery, $params);
 
   }
@@ -74,7 +75,7 @@ class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
     $object->ValidateFields();
 
     $sqlQuery="UPDATE {{entity.name}} SET {% for property in entity.properties %}{% if not property.key %}{{property.name|capitalize}} = :{{property.name}}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %} WHERE {% for property in entity.properties %}{% if property.key %}{{property.name}} = :{{property.name}}{% endif %}{% endfor %}";
-    $params = array({% for property in entity.properties %}{% if not property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% if property.linkid %}->get_{{property.linkid}}(){% endif %}{% else %}{% if property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% endif %}{% endif %}{% if not loop.last %},{% endif %}{% endfor %});
+    $params = array({% for property in entity.properties %}{% if not property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% if property.linkid %}->get_{{property.linkid.name}}(){% endif %}{% else %}{% if property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% endif %}{% endif %}{% if not loop.last %},{% endif %}{% endfor %});
     return $this->IzvrsiUpit($sqlQuery, $params);
   }
 

@@ -5,44 +5,41 @@ WebApp Konferencije[
 
   entity Konferencija !m {
     $key (idKonferencije)idKonferencija =
-    ^ naziv =
-    opis =
+    ^ naziv:input =
+    opis:desc =
     rang <idRang>
     #links[
-      ->nazivRang*
-    ]
-    #dal[
-     dal nesto
+      +nazivRang*
     ]
     #paths[
      %c  Rang
-     %d  DAL
      %d  RangDAL
     ]
     #actions[
-     @konferencije : All
-     @konferencija : Read
+     @konferencije : views
+     @konferencija : view
+     @dodajkonferenciju : create
+     @izbrisikonferenciju : delete
+     @izmenikonferenciju : edit
      @konferencijepretraga : !PrikaziKonferencijePretraga
-     @izbrisikonferenciju : Delete
-     @izmenikonferenciju : Edit
-     @dodajkonferenciju : Create
+     +@rangovi : views
     ]
   }
 
   entity Rang {
     $key (idRang)idRang =
-    ^ nazivRang =
+    ^ nazivRang:input =
     #paths[
       %c InterfaceFieldValidator
       %c inputFormaterCustom
-      %d DAL
       %d CommonDatabaseMethods
     ]
     #actions[
-     @rangovi : All
-     @rang : Read
+     @rangovi : views
+     @rang : view
      @rangpretraga : !RangPretaraga
-     @izbrisirang : Delete
+     @izbrisirang : delete
+     @dodajRang : create
     ]
   }
 

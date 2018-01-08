@@ -10,7 +10,7 @@ EntityModel:
 ;
 
 Class:
-  'class' ('+db' name=ID)? '{'
+  'class' (dbase='+db' name=ID)? '{'
     entities+=Entity
   '}'
 ;
@@ -32,7 +32,7 @@ Service:
 ;
 
 Property:
-    (key='$key')* ('('plural=ID ')')? (title='^')? name=ID  ((addlink='<' linkid=ID '>')? | init='=' (initStr=STRING)? )?
+    (key='$key')* ('('plural=ID ')')? (title='^')? name=ID (':' types=Type)? ((addlink='<' linkid=[Property] '>')? | init='=' (initStr=STRING)? )?
 ;
 
 Dal:
@@ -40,7 +40,7 @@ Dal:
 ;
 
 Action:
-  '@' name=ID ':' meths=Method
+  (linkmethod='+')? '@' name=ID ':' meths=Method
 ;
 
 Path:
@@ -48,11 +48,15 @@ Path:
 ;
 
 Link:
-  '->' name=ID by='*'
+  '+' linkby=[Property] by='*'
 ;
 
 Method:
-  ga='All' | de='Delete' | ad='Create' | ed='Edit' | go='Read' | (custom='!' name=ID)?
+  ga='views' | de='delete' | ad='create' | ed='edit' | go='view' | (custom='!' name=ID)?
+;
+
+Type:
+  input='input' | textarea='desc' | date='date' | time='time'
 ;
 
 Comment:
