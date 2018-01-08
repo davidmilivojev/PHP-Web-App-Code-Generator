@@ -54,8 +54,11 @@ for ($i=0; $i<=count($data)-1;$i++)
               <div class="index-item-header">
               </div>
               {% for ent in entity.properties %}
-              {% if not ent.key and not ent.addlink  %}
+              {% if ent.title and  not ent.key and not ent.addlink  %}
               <h2>{{ent.name|capitalize}}: <?php echo $k->get_{{ent.name}}(); ?></h2>
+              {% endif %}
+              {% if not ent.title and not ent.key and not ent.addlink  %}
+              <p>{{ent.name|capitalize}}: <?php echo $k->get_{{ent.name}}(); ?></p>
               {% endif %}
               {% endfor %}
               {% for enty in entity.services %}

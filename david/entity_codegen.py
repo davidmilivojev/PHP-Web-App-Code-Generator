@@ -25,6 +25,8 @@ from backend.php_dalDefault import php_dalDefault
 from backend.php_dal import php_dal
 from backend.php_api import php_api
 from backend.html_index import html_index
+from backend.html_delete import html_delete
+from backend.html_controlpanel import html_controlpanel
 
 
 
@@ -44,11 +46,13 @@ def main(debug=False):
     php_commonDatabaseMethods(this_folder, debug)
     php_dalRezUpita(this_folder, debug)
     php_dal(this_folder, debug)
-    html_index(this_folder, debug)
     php_api(this_folder, debug)
     php_sideMenu(this_folder, debug)
     php_menu(this_folder, debug)
     php_dalDefault(this_folder, debug)
+    html_index(this_folder, debug)
+    html_delete(this_folder, debug)
+    html_controlpanel(this_folder, debug)
 
 
 if __name__ == "__main__":

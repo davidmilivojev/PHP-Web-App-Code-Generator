@@ -32,7 +32,7 @@ Service:
 ;
 
 Property:
-    (key='$key')* ('('plural=ID ')')? name=ID  ((addlink='<' linkid=ID '>')? | init='=' (initStr=STRING)? )?
+    (key='$key')* ('('plural=ID ')')? (title='^')? name=ID  ((addlink='<' linkid=ID '>')? | init='=' (initStr=STRING)? )?
 ;
 
 Dal:

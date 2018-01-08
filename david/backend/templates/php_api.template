@@ -49,6 +49,98 @@
             {% endfor %}
             {% endfor %}
 
+
+            {% for enty in ent.entities %}
+            {% for ser in enty.services %}
+            {% for ap in ser.actions %}
+            {% if ap.meths.de %}
+            private function {{ap.name}}() {
+                if ($this->get_request_method() != "POST") {
+                    $this->response('false', 406);
+                }
+
+                ${{enty.name|lower}} = new {{enty.name|capitalize}}();
+                ${{enty.name|lower}}->set_{% for property in enty.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}((int) $this->_request['id']);
+                ${{enty.name|lower}}DAL = new {{enty.name|capitalize}}DAL();
+                $succ = ${{enty.name|lower}}DAL->DeleteOne(${{enty.name|lower}});
+                if (!$succ) $this->response('false', 204);
+                else $this->response('true', 200);
+            }
+
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            {% endfor %}
+
+            {% for enty in ent.entities %}
+            {% for ser in enty.services %}
+            {% for ap in ser.actions %}
+            {% if ap.meths.ad %}
+            private function {{ap.name}}() {
+                if ($this->get_request_method() != "POST") {
+                    $this->response('false', 406);
+                }
+
+                ${{enty.name|lower}} = new {{enty.name|capitalize}}();
+                {% for property in enty.properties %}
+                {% if not property.key and not property.addlink %}
+                ${{enty.name|lower}}->set_{{property.name}}((string) $this->_request['{{property.name|capitalize}}']);
+                {% endif %}
+                {% endfor %}
+                {% for property in enty.properties %}
+                {% if property.addlink %}
+                ${{property.name}}DAL = new {{property.name|capitalize}}DAL();
+                ${{enty.name|lower}}->set_{{property.name}}(${{property.name}}DAL->GetOne((int) $this->_request['{{property.name|capitalize}}']));
+                {% endif %}
+                {% endfor %}
+
+                ${{enty.name|lower}}DAL = new {{enty.name|capitalize}}DAL();
+                $succ = ${{enty.name|lower}}DAL->EditOne(${{enty.name|lower}});
+                if (!$succ) $this->response('false', 204);
+                else $this->response('true', 200);
+            }
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            {% endfor %}
+
+
+            {% for enty in ent.entities %}
+            {% for ser in enty.services %}
+            {% for ap in ser.actions %}
+            {% if ap.meths.ed %}
+            private function {{ap.name}}() {
+                if ($this->get_request_method() != "POST") {
+                    $this->response('false', 406);
+                }
+
+                ${{enty.name|lower}} = new {{enty.name|capitalize}}();
+                {% for property in enty.properties %}
+                {% if property.key %}
+                ${{enty.name|lower}}->set_{{property.name}}((int) $this->_request['id']);
+                {% else %}
+                {% if not property.addlink %}
+                ${{enty.name|lower}}->set_{{property.name}}((string) $this->_request['{{property.name|capitalize}}']);
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% for property in enty.properties %}
+                {% if property.addlink %}
+                ${{property.name}}DAL = new {{property.name|capitalize}}DAL();
+                ${{enty.name|lower}}->set_{{property.name}}(${{property.name}}DAL->GetOne((int) $this->_request['{{property.name|capitalize}}']));
+                {% endif %}
+                {% endfor %}
+
+                ${{enty.name|lower}}DAL = new {{enty.name|capitalize}}DAL();
+                $succ = ${{enty.name|lower}}DAL->EditOne(${{enty.name|lower}});
+                if (!$succ) $this->response('false', 204);
+                else $this->response('true', 200);
+            }
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            {% endfor %}
+
             {% for enty in ent.entities %}
             {% for ser in enty.services %}
             {% for ap in ser.actions %}
