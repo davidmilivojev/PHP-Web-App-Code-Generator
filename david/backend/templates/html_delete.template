@@ -3,7 +3,7 @@
 if(!isset($_SESSION)) session_start();
 if (!isset($_SESSION["username"])) header('Location: index{{entity.name}}.php');
 
-$urlPOST = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.de and not prop.linkmethod %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}";
+$urlPOST = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.de %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}";
    $curl_post_data = array(
         'id' => $_POST['id']
         );

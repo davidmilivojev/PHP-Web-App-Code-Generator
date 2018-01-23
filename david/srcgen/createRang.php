@@ -10,7 +10,7 @@ if (!empty($_POST['action']))
 
    $urlPOST = "http://localhost/david/services/dodajRang";
    $curl_post_data = array(
-        'Nazivrang' => $_POST['Nazivrang']        );
+        'Nazivrang' => $_POST['Nazivrang'],         'Sponzor' => $_POST['Sponzor']    );
    $curl = curl_init($urlPOST);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
    curl_setopt($curl, CURLOPT_POST, true);
@@ -56,8 +56,9 @@ if (!empty($_POST['action']))
           <table>
             <tr>
               <td>Nazivrang:</td>
-              <td><input type="text" size="40" name="Nazivrang" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
+              <td><input type="text" alt="inp" size="40" name="Nazivrang" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
             </tr>
+            <?php  include ('parts/actions/views/actionSponzorViews.php'); ?>
             <tr>
               <td colspan="2" align="center">
                 <input type="hidden" name="action" value="create" >

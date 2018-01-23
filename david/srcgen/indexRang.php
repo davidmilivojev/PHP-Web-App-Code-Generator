@@ -18,7 +18,9 @@ for ($i=0; $i<=count($data)-1;$i++)
     $rang->jsonDeserialize($data[$i]);
     array_push($rangovi, $rang);
 }
+
 ?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -53,7 +55,8 @@ for ($i=0; $i<=count($data)-1;$i++)
             <div class="index-items">
               <div class="index-item-header">
               </div>
-              <h2>Nazivrang: <?php echo $k->get_nazivRang(); ?></h2>
+              <h2>Nazivrang: <?php echo $k->get_nazivrang(); ?></h2>
+              <p>Sponzor: <?php echo $k->get_sponzor()->get_naziv(); ?></p>
             </div>
           <?php endforeach; ?>
       </div>

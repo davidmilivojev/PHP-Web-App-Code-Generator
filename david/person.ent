@@ -1,20 +1,15 @@
 
 WebApp Konferencije[
+  "Ovo je sajt na temu konferencija"
 
-  class +db konferencije_ias{
+  class david +db bazatest{
 
   entity Konferencija !m {
-    $key (idKonferencije)idKonferencija =
-    ^ naziv:input =
-    opis:desc =
-    rang <idRang>
-    #links[
-      +nazivRang*
-    ]
-    #paths[
-     %c  Rang
-     %d  RangDAL
-    ]
+    $key idKonferencija =
+    ^naziv : input = 55
+    opis : desc = 20
+    +Rang <idRang> nazivrang
+    +Sponzor <idSponzor> naziv
     #actions[
      @konferencije : views
      @konferencija : view
@@ -22,28 +17,53 @@ WebApp Konferencije[
      @izbrisikonferenciju : delete
      @izmenikonferenciju : edit
      @konferencijepretraga : !PrikaziKonferencijePretraga
-     +@rangovi : views
     ]
   }
 
   entity Rang {
-    $key (idRang)idRang =
-    ^ nazivRang:input =
-    #paths[
-      %c InterfaceFieldValidator
-      %c inputFormaterCustom
-      %d CommonDatabaseMethods
-    ]
+    $key idRang =
+    ^nazivrang : input =
+    +Sponzor <idSponzor> naziv
     #actions[
      @rangovi : views
      @rang : view
      @rangpretraga : !RangPretaraga
      @izbrisirang : delete
      @dodajRang : create
+     @izmenirang : edit
     ]
   }
 
+  entity Sponzor {
+    $key idSponzor =
+    ^naziv : input =
+     kompanija : desc =
+    #actions[
+     @sponzori : views
+     @sponzor : view
+     @sponzorpretraga : !SponzorPretaraga
+     @izbrisisponzor : delete
+     @dodajsponzor : create
+     @izmenisponzor : edit
+    ]
+  }
 
+  entity Predavanje !d {
+    $key idPredavanje =
+    ^naziv : input =
+    predavaci : desc =
+    >pocetak : date =
+    kraj : date =
+    +Konferencija <idKonferencija> naziv
+    #actions[
+     @predavanja : views
+     @predavanje : view
+     @predavanjepretraga : !PredavanjePretaraga
+     @izbrisipredavanje : delete
+     @dodajpredavanje : create
+     @izmenipredavanje : edit
+    ]
+  }
 
   }
 

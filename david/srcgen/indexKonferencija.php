@@ -18,7 +18,9 @@ for ($i=0; $i<=count($data)-1;$i++)
     $konferencija->jsonDeserialize($data[$i]);
     array_push($konferencije, $konferencija);
 }
+
 ?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -55,7 +57,8 @@ for ($i=0; $i<=count($data)-1;$i++)
               </div>
               <h2>Naziv: <?php echo $k->get_naziv(); ?></h2>
               <p>Opis: <?php echo $k->get_opis(); ?></p>
-              <p>Rang: <?php echo $k->get_rang()->get_nazivRang(); ?></p>
+              <p>Rang: <?php echo $k->get_rang()->get_nazivrang(); ?></p>
+              <p>Sponzor: <?php echo $k->get_sponzor()->get_naziv(); ?></p>
             </div>
           <?php endforeach; ?>
       </div>

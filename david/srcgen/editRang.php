@@ -8,10 +8,10 @@ require_once '/lib/class/Rang.php';
 if (!empty($_POST['action']))
 {
 
-   $urlPOST = "http://localhost/david/services/";
+   $urlPOST = "http://localhost/david/services/izmenirang";
    $curl_post_data = array(
      'id' => $_POST['id'],
-        'Nazivrang' => $_POST['Nazivrang']        );
+          'Nazivrang' => $_POST['Nazivrang'],         'Sponzor' => $_POST['Sponzor']        );
    $curl = curl_init($urlPOST);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
    curl_setopt($curl, CURLOPT_POST, true);
@@ -65,15 +65,17 @@ else header('Location: controlPanelRang.php');
         </div>
     </header>
   <img class="banner" src="images/banner.svg" alt="">
-  <h1>Izmena konferencije:  <?php echo $rang->get_nazivRang(); ?></h1>
+  <h1>Izmena konferencije:  <?php echo $rang->get_nazivrang(); ?></h1>
   <div class="wrapper">
       <div class="content">
+      <?php $varcbx = $rang ?>
           <form name="konf"method="post" action="editRang.php">
           <table>
             <tr>
               <td>Nazivrang:</td>
-              <td><input type="text" size="40" name="Nazivrang" value="<?php echo $rang->get_nazivrang(); ?>" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
+              <td><input type="text" alt="inp" size="40" name="Nazivrang" value="<?php echo $rang->get_nazivrang(); ?>" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
             </tr>
+            <?php  require_once "parts/actions/edit/actionSponzorEdit.php"; ?>
             <tr>
             <td colspan="2" align="center">
             <input type="hidden" name="action" value="edit" >

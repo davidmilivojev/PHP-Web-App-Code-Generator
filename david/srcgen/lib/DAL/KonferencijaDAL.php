@@ -2,6 +2,8 @@
 require_once '../lib/class/Konferencija.php';
 require_once '../lib/DAL/DAL.php';
 require_once '../lib/DAL/RangDAL.php';
+require_once '../lib/DAL/SponzorDAL.php';
+require_once '../lib/DAL/CommonDatabaseMethods.php';
 
 class KonferencijaDAL extends DAL implements CommonDatabaseMethods
 {
@@ -11,8 +13,15 @@ class KonferencijaDAL extends DAL implements CommonDatabaseMethods
   }
 
 
-
   function PrikaziKonferencijePretraga($search){
+
+    $tempKonferencija = new Konferencija();
+    $tempKonferencija->set_naziv($search);
+    $tempKonferencija->ValidateFields();
+
+    $sqlQuery="SELECT * FROM Konferencija WHERE Naziv LIKE :searchByKonferencija";
+    $params = array(":searchByKonferencija"=>"%".$tempKonferencija->get_naziv()."%");
+
     $results = $this->IzvrsiUpit($sqlQuery,$params);
 
     $konferencijaResults = array();
@@ -26,6 +35,8 @@ class KonferencijaDAL extends DAL implements CommonDatabaseMethods
 
         $rangDAL = new RangDAL();
         $konferencijaResult->set_rang($rangDAL->GetOne($k->Rang));
+        $sponzorDAL = new SponzorDAL();
+        $konferencijaResult->set_sponzor($sponzorDAL->GetOne($k->Sponzor));
         $konferencijaResults[] = $konferencijaResult;
     }
 
@@ -39,8 +50,8 @@ class KonferencijaDAL extends DAL implements CommonDatabaseMethods
 
     $object->ValidateFields();
 
-    $sqlQuery="INSERT INTO Konferencija(Naziv, Opis, Rang) VALUES(:naziv, :opis, :rang)";
-    $params = array(":naziv"=>$object->get_naziv(), ":opis"=>$object->get_opis(), ":rang"=>$object->get_rang()->get_idRang());
+    $sqlQuery="INSERT INTO Konferencija(Naziv, Opis, Rang, Sponzor) VALUES(:naziv, :opis, :rang, :sponzor)";
+    $params = array(":naziv"=>$object->get_naziv(), ":opis"=>$object->get_opis(), ":rang"=>$object->get_rang()->get_idRang(), ":sponzor"=>$object->get_sponzor()->get_idSponzor());
     return $this->IzvrsiUpit($sqlQuery, $params);
 
   }
@@ -48,8 +59,8 @@ class KonferencijaDAL extends DAL implements CommonDatabaseMethods
   public function DeleteOne($object){
 
     $object->ValidateFields();
-    $sqlQuery="DELETE FROM Konferencija WHERE idKonferencija = :idKonferencije";
-    $params = array(":idKonferencije"=>$object->get_idKonferencija());
+    $sqlQuery="DELETE FROM Konferencija WHERE idKonferencija = :idKonferencija";
+    $params = array(":idKonferencija"=>$object->get_idKonferencija());
     return $this->IzvrsiUpit($sqlQuery, $params);
 
   }
@@ -57,8 +68,8 @@ class KonferencijaDAL extends DAL implements CommonDatabaseMethods
   public function EditOne($object){
     $object->ValidateFields();
 
-    $sqlQuery="UPDATE Konferencija SET Naziv = :naziv, Opis = :opis, Rang = :rang WHERE idKonferencija = :idKonferencija";
-    $params = array(":idKonferencija"=>$object->get_idKonferencija(),":naziv"=>$object->get_naziv(),":opis"=>$object->get_opis(),":rang"=>$object->get_rang()->get_idRang());
+    $sqlQuery="UPDATE Konferencija SET Naziv = :naziv, Opis = :opis, Rang = :rang, Sponzor = :sponzor WHERE idKonferencija = :idKonferencija";
+    $params = array(":idKonferencija"=>$object->get_idKonferencija(),":naziv"=>$object->get_naziv(),":opis"=>$object->get_opis(),":rang"=>$object->get_rang()->get_idRang(),":sponzor"=>$object->get_sponzor()->get_idSponzor());
     return $this->IzvrsiUpit($sqlQuery, $params);
   }
 
@@ -79,6 +90,8 @@ class KonferencijaDAL extends DAL implements CommonDatabaseMethods
 
         $rangDAL = new RangDAL();
         $konferencijaResult->set_rang($rangDAL->GetOne($k->Rang));
+        $sponzorDAL = new SponzorDAL();
+        $konferencijaResult->set_sponzor($sponzorDAL->GetOne($k->Sponzor));
         $konferencijaResults[] = $konferencijaResult;
     }
 
@@ -90,6 +103,7 @@ class KonferencijaDAL extends DAL implements CommonDatabaseMethods
 
     $konferencijaResult = new Konferencija();
     $konferencijaResult->set_idKonferencija($object);
+
 
     $sqlQuery="SELECT * FROM Konferencija WHERE idKonferencija = :idKonferencija";
     $params = array(":idKonferencija" =>$konferencijaResult->get_idKonferencija());
@@ -106,6 +120,8 @@ class KonferencijaDAL extends DAL implements CommonDatabaseMethods
 
         $rangDAL = new RangDAL();
         $konferencijaResult->set_rang($rangDAL->GetOne($k->Rang));
+        $sponzorDAL = new SponzorDAL();
+        $konferencijaResult->set_sponzor($sponzorDAL->GetOne($k->Sponzor));
     }
 
     return $konferencijaResult;

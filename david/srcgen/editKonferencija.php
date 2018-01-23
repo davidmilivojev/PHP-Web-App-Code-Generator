@@ -11,7 +11,7 @@ if (!empty($_POST['action']))
    $urlPOST = "http://localhost/david/services/izmenikonferenciju";
    $curl_post_data = array(
      'id' => $_POST['id'],
-        'Naziv' => $_POST['Naziv'],         'Opis' => $_POST['Opis'],         'Rang' => $_POST['Rang']        );
+          'Naziv' => $_POST['Naziv'],           'Opis' => $_POST['Opis'],         'Rang' => $_POST['Rang'],         'Sponzor' => $_POST['Sponzor']        );
    $curl = curl_init($urlPOST);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
    curl_setopt($curl, CURLOPT_POST, true);
@@ -24,7 +24,7 @@ if (!empty($_POST['action']))
 if (!empty($_GET['id']))
 {
    $id = $_GET['id']; // iz url adrese edit.php?id=XXX
-   $urlGet = "http://localhost/david/services/konferencija/?idKonferencije=".$id;
+   $urlGet = "http://localhost/david/services/konferencija/?idKonferencija=".$id;
    $curl = curl_init($urlGet);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
    $response = curl_exec($curl);
@@ -68,44 +68,19 @@ else header('Location: controlPanelKonferencija.php');
   <h1>Izmena konferencije:  <?php echo $konferencija->get_naziv(); ?></h1>
   <div class="wrapper">
       <div class="content">
+      <?php $varcbx = $konferencija ?>
           <form name="konf"method="post" action="editKonferencija.php">
           <table>
             <tr>
               <td>Naziv:</td>
-              <td><input type="text" size="40" name="Naziv" value="<?php echo $konferencija->get_naziv(); ?>" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
+              <td><input type="text" alt="inp" size="40" name="Naziv" value="<?php echo $konferencija->get_naziv(); ?>" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
             </tr>
             <tr>
               <td valign="top">Opis:</td>
               <td><textarea name="Opis" cols="30" rows="5" required oninvalid="setCustomValidity('Unesite opis konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}"><?php echo $konferencija->get_opis(); ?></textarea></td>
             </tr>
-            <tr>
-              <td>Rang:</td>
-              <td>
-               <select name="Rang">
-                  <?php
-
-                      $curl = curl_init('http://localhost/david/services/rangovi');
-                      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                      $response = curl_exec($curl);
-                      $data = json_decode($response);
-                      $rangovi = array();
-
-                      for ($i=0; $i<=count($data)-1;$i++)
-                      {
-                          $rang = new Rang();
-                          $rang->jsonDeserialize($data[$i]);
-                          array_push($rangovi, $rang);
-                      }
-
-                      foreach($rangovi as $k):
-                      ?>
-                        <option value="<?php echo $k->get_idRang(); ?>"  <?php if ($k->get_idRang() == $konferencija->get_rang()->get_idRang()) echo " selected"; ?>>  <?php echo $k->get_nazivRang(); ?> </option>
-                      <?php
-                      endforeach;
-                      ?>
-                 </select>
-              </td>
-            </tr>
+            <?php  require_once "parts/actions/edit/actionRangEdit.php"; ?>
+            <?php  require_once "parts/actions/edit/actionSponzorEdit.php"; ?>
             <tr>
             <td colspan="2" align="center">
             <input type="hidden" name="action" value="edit" >

@@ -10,7 +10,7 @@ if (!empty($_POST['action']))
 
    $urlPOST = "http://localhost/david/services/dodajkonferenciju";
    $curl_post_data = array(
-        'Naziv' => $_POST['Naziv'],         'Opis' => $_POST['Opis'],         'Rang' => $_POST['Rang']        );
+        'Naziv' => $_POST['Naziv'],         'Opis' => $_POST['Opis'],         'Rang' => $_POST['Rang'],         'Sponzor' => $_POST['Sponzor']    );
    $curl = curl_init($urlPOST);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
    curl_setopt($curl, CURLOPT_POST, true);
@@ -56,40 +56,14 @@ if (!empty($_POST['action']))
           <table>
             <tr>
               <td>Naziv:</td>
-              <td><input type="text" size="40" name="Naziv" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
+              <td><input type="text" alt="inp" size="40" name="Naziv" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
             </tr>
             <tr>
               <td valign="top">Opis:</td>
               <td><textarea name="Opis" cols="30" rows="5" required oninvalid="setCustomValidity('Unesite opis konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}"></textarea></td>
             </tr>
-            <tr>
-              <td>Rang:</td>
-              <td>
-               <select name="Rang">
-                  <?php
-
-                      $curl = curl_init('http://localhost/david/services/rangovi');
-                      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                      $response = curl_exec($curl);
-                      $data = json_decode($response);
-                      $rangovi = array();
-
-                      for ($i=0; $i<=count($data)-1;$i++)
-                      {
-                          $rang = new Rang();
-                          $rang->jsonDeserialize($data[$i]);
-                          array_push($rangovi, $rang);
-                      }
-
-                      foreach($rangovi as $k):
-                      ?>
-                        <option value="<?php echo $k->get_idRang(); ?>">  <?php echo $k->get_nazivRang(); ?> </option>
-                      <?php
-                      endforeach;
-                      ?>
-                 </select>
-              </td>
-            </tr>
+            <?php  include ('parts/actions/views/actionRangViews.php'); ?>
+            <?php  include ('parts/actions/views/actionSponzorViews.php'); ?>
             <tr>
               <td colspan="2" align="center">
                 <input type="hidden" name="action" value="create" >

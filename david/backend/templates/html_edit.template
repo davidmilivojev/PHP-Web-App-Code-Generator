@@ -8,13 +8,16 @@ require_once '/lib/class/{{entity.name}}.php';
 if (!empty($_POST['action']))
 {
 
-   $urlPOST = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ed and not prop.linkmethod %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}";
+   $urlPOST = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ed %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}";
    $curl_post_data = array(
      'id' => $_POST['id'],
      {% for ent in entity.properties %}
-     {% if not ent.key %}
-        '{{ent.name|capitalize}}' => $_POST['{{ent.name|capitalize}}']{% if not loop.last %}, {% endif %}
-    {% endif %}
+      {% if not ent.key and not ent.addlink %}
+          '{{ent.name|capitalize}}' => {% if ent.types.date %}$_POST['{{ent.name|capitalize}}']." ".$_POST['{{ent.name|capitalize}}Vreme'].":00"{% else %}$_POST['{{ent.name|capitalize}}']{% endif %}{% if not loop.last %}, {% endif %}
+      {% endif %}
+      {% if ent.addlink %}
+        '{{ent.linkname.name|capitalize}}' => $_POST['{{ent.linkname.name|capitalize}}']{% if not loop.last %}, {% endif %}
+      {% endif %}
     {% endfor %}
         );
    $curl = curl_init($urlPOST);
@@ -29,7 +32,7 @@ if (!empty($_POST['action']))
 if (!empty($_GET['id']))
 {
    $id = $_GET['id']; // iz url adrese edit.php?id=XXX
-   $urlGet = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go and not prop.linkmethod %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}/?{% for property in entity.properties %}{% if property.plural %}{{property.plural}}{% endif %}{% endfor %}=".$id;
+   $urlGet = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}/?{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}=".$id;
    $curl = curl_init($urlGet);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
    $response = curl_exec($curl);
@@ -73,13 +76,14 @@ else header('Location: controlPanel{{entity.name|capitalize}}.php');
   <h1>Izmena konferencije:  <?php echo ${{entity.name|lower}}->get_{% for ent in entity.properties %}{% if ent.title and  not ent.key and not ent.addlink  %}{{ent.name}}{% endif %}{% endfor %}(); ?></h1>
   <div class="wrapper">
       <div class="content">
+      <?php $varcbx = ${{entity.name|lower}} ?>
           <form name="konf"method="post" action="edit{{entity.name|capitalize}}.php">
           <table>
             {% for ent in entity.properties %}
             {% if ent.types.input and not ent.key %}
             <tr>
               <td>{{ent.name|capitalize}}:</td>
-              <td><input type="text" size="40" name="{{ent.name|capitalize}}" value="<?php echo ${{entity.name|lower}}->get_{{ent.name|lower}}(); ?>" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
+              <td><input type="text" alt="inp" size="40" name="{{ent.name|capitalize}}" value="<?php echo ${{entity.name|lower}}->get_{{ent.name|lower}}(); ?>" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
             </tr>
             {% endif %}
             {% if ent.types.textarea and not ent.key %}
@@ -88,35 +92,23 @@ else header('Location: controlPanel{{entity.name|capitalize}}.php');
               <td><textarea name="{{ent.name|capitalize}}" cols="30" rows="5" required oninvalid="setCustomValidity('Unesite opis konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}"><?php echo ${{entity.name|lower}}->get_{{ent.name|lower}}(); ?></textarea></td>
             </tr>
             {% endif %}
-            {% if ent.addlink %}
+            {% if ent.types.date %}
             <tr>
               <td>{{ent.name|capitalize}}:</td>
               <td>
-               <select name="{{ent.name|capitalize}}">
-                  <?php
-
-                      $curl = curl_init('http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga and prop.linkmethod %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}');
-                      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                      $response = curl_exec($curl);
-                      $data = json_decode($response);
-                      ${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga and prop.linkmethod %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} = array();
-
-                      for ($i=0; $i<=count($data)-1;$i++)
-                      {
-                          ${{ent.name|lower}} = new {{ent.name|capitalize}}();
-                          ${{ent.name|lower}}->jsonDeserialize($data[$i]);
-                          array_push(${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga and prop.linkmethod %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}, ${{ent.name|lower}});
-                      }
-
-                      foreach(${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga and prop.linkmethod %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} as $k):
-                      ?>
-                        <option value="<?php echo $k->get_{{ent.linkid.name}}(); ?>"  <?php if ($k->get_{{ent.linkid.name}}() == ${{entity.name|lower}}->get_{% if ent.addlink %}{{ent.name|lower}}{% endif %}()->get_{{ent.linkid.name}}()) echo " selected"; ?>>  <?php echo $k->get_{% for ser in entity.services %}{% for cb in ser.links %}{% if cb.by %}{{cb.linkby.name}}{% endif %}{% endfor %}{% endfor %}(); ?> </option>
-                      <?php
-                      endforeach;
-                      ?>
-                 </select>
+                <input type="date" name="{{ent.name|capitalize}}" value="<?php
+                  $time = strtotime(${{entity.name|lower}}->get_{{ent.name|lower}}());
+                  $myFormatForView = date("Y-m-d", $time);
+                  echo $myFormatForView; ?>">
+                <input type="time" name="{{ent.name|capitalize}}Vreme" value="<?php
+                  $time = strtotime(${{entity.name|lower}}->get_{{ent.name|lower}}());
+                  $myFormatForView = date("h:m",$time);
+                  echo $myFormatForView; ?>" >
               </td>
             </tr>
+            {% endif %}
+            {% if ent.addlink %}
+            <?php  require_once "parts/actions/edit/action{{ent.linkname.name|capitalize}}Edit.php"; ?>
             {% endif %}
             {% endfor %}
             <tr>

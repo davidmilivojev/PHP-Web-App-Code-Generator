@@ -1,6 +1,7 @@
 <?php
 require_once '../lib/class/Rang.php';
 require_once '../lib/DAL/DAL.php';
+require_once '../lib/DAL/SponzorDAL.php';
 require_once '../lib/DAL/CommonDatabaseMethods.php';
 
 class RangDAL extends DAL implements CommonDatabaseMethods
@@ -11,8 +12,9 @@ class RangDAL extends DAL implements CommonDatabaseMethods
   }
 
 
-
   function RangPretaraga($search){
+
+
     $results = $this->IzvrsiUpit($sqlQuery,$params);
 
     $rangResults = array();
@@ -21,8 +23,10 @@ class RangDAL extends DAL implements CommonDatabaseMethods
     {
         $rangResult = new Rang();
         $rangResult->set_idRang($k->idRang);
-        $rangResult->set_nazivRang($k->Nazivrang);
+        $rangResult->set_nazivrang($k->Nazivrang);
 
+        $sponzorDAL = new SponzorDAL();
+        $rangResult->set_sponzor($sponzorDAL->GetOne($k->Sponzor));
         $rangResults[] = $rangResult;
     }
 
@@ -36,8 +40,8 @@ class RangDAL extends DAL implements CommonDatabaseMethods
 
     $object->ValidateFields();
 
-    $sqlQuery="INSERT INTO Rang(Nazivrang) VALUES(:nazivRang)";
-    $params = array(":nazivRang"=>$object->get_nazivRang());
+    $sqlQuery="INSERT INTO Rang(Nazivrang, Sponzor) VALUES(:nazivrang, :sponzor)";
+    $params = array(":nazivrang"=>$object->get_nazivrang(), ":sponzor"=>$object->get_sponzor()->get_idSponzor());
     return $this->IzvrsiUpit($sqlQuery, $params);
 
   }
@@ -54,8 +58,8 @@ class RangDAL extends DAL implements CommonDatabaseMethods
   public function EditOne($object){
     $object->ValidateFields();
 
-    $sqlQuery="UPDATE Rang SET Nazivrang = :nazivRang WHERE idRang = :idRang";
-    $params = array(":idRang"=>$object->get_idRang(),":nazivRang"=>$object->get_nazivRang());
+    $sqlQuery="UPDATE Rang SET Nazivrang = :nazivrang, Sponzor = :sponzor WHERE idRang = :idRang";
+    $params = array(":idRang"=>$object->get_idRang(),":nazivrang"=>$object->get_nazivrang(),":sponzor"=>$object->get_sponzor()->get_idSponzor());
     return $this->IzvrsiUpit($sqlQuery, $params);
   }
 
@@ -71,8 +75,10 @@ class RangDAL extends DAL implements CommonDatabaseMethods
     {
         $rangResult = new Rang();
         $rangResult->set_idRang($k->idRang);
-        $rangResult->set_nazivRang($k->Nazivrang);
+        $rangResult->set_nazivrang($k->Nazivrang);
 
+        $sponzorDAL = new SponzorDAL();
+        $rangResult->set_sponzor($sponzorDAL->GetOne($k->Sponzor));
         $rangResults[] = $rangResult;
     }
 
@@ -85,6 +91,7 @@ class RangDAL extends DAL implements CommonDatabaseMethods
     $rangResult = new Rang();
     $rangResult->set_idRang($object);
 
+
     $sqlQuery="SELECT * FROM Rang WHERE idRang = :idRang";
     $params = array(":idRang" =>$rangResult->get_idRang());
 
@@ -95,8 +102,10 @@ class RangDAL extends DAL implements CommonDatabaseMethods
 
         $rangResult = new Rang();
         $rangResult->set_idRang($k->idRang);
-        $rangResult->set_nazivRang($k->Nazivrang);
+        $rangResult->set_nazivrang($k->Nazivrang);
 
+        $sponzorDAL = new SponzorDAL();
+        $rangResult->set_sponzor($sponzorDAL->GetOne($k->Sponzor));
     }
 
     return $rangResult;

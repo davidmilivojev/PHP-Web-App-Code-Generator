@@ -5,7 +5,6 @@ if (!isset($_SESSION["username"])) header('Location: indexRang.php');
 
 
 require_once '/lib/class/Rang.php';
-
 $curl = curl_init('http://localhost/david/services/rangovi');
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($curl);
@@ -53,7 +52,7 @@ for ($i=0; $i<=count($data)-1;$i++)
         <?php foreach($rangovi as $k): ?>
           <div class="access-items">
             <h2 class="access-title control">
-            Nazivrang: <?php echo $k->get_nazivRang(); ?>
+            Nazivrang: <?php echo $k->get_nazivrang(); ?>
             </h2>
             <form alt="edit"name="edit<?php echo $k->get_idRang(); ?>" method="GET" action="editRang.php">
               <input type="hidden" name="id" value="<?php echo $k->get_idRang(); ?>"/>

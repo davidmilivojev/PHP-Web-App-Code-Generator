@@ -5,50 +5,36 @@
 
 EntityModel:
     'WebApp' name=ID '['
+    (shortDesc=STRING)?
         classes+=Class
     ']'
 ;
 
 Class:
-  'class' (dbase='+db' name=ID)? '{'
+  'class' (cname=ID)? (dbase='+db' name=ID)? '{'
     entities+=Entity
   '}'
 ;
 
 Entity:
-    'entity' name=ID (main='!m')? '{'
+    'entity' name=ID (main='!m' | detail='!d')? '{'
         properties+=Property
-        services*=Service
+        services+=Service
     '}'
 ;
 
 Service:
-  ('#' (path='paths' | dal='dal' | action='actions' | link='links' )* '['
-  links*=Link
-  paths*=Path
-  dals*=Dal
-  actions*=Action
+  ('#' ( action='actions' )* '['
+  actions+=Action
   ']')?
 ;
 
 Property:
-    (key='$key')* ('('plural=ID ')')? (title='^')? name=ID (':' types=Type)? ((addlink='<' linkid=[Property] '>')? | init='=' (initStr=STRING)? )?
-;
-
-Dal:
-  'dal' name=ID
+    (key='$key')? (title='^' | sort='>')? (name=ID (':' types=Type)? ( init='=' (numb=INT)? )?) | (addlink='+' linkname=[Entity] '<' linkid=[Property] '>' showby=[Property])?
 ;
 
 Action:
-  (linkmethod='+')? '@' name=ID ':' meths=Method
-;
-
-Path:
-  (pathclass='%c' | pathdal='%d')? name=ID
-;
-
-Link:
-  '+' linkby=[Property] by='*'
+  '@' name=ID ':' meths=Method
 ;
 
 Method:
@@ -56,7 +42,7 @@ Method:
 ;
 
 Type:
-  input='input' | textarea='desc' | date='date' | time='time'
+  input='input'  | textarea='desc' | date='date' | time='time'
 ;
 
 Comment:

@@ -1,12 +1,15 @@
-
 <?php
+require_once 'Sponzor.php';
+
 require_once 'InterfaceFieldValidator.php';
 require_once 'inputFormaterCustom.php';
+
 
 class Rang implements JsonSerializable, FieldValidator {
 
   protected  $_idRang=0;
-  protected  $_nazivRang="";
+  protected  $_nazivrang="";
+  protected  $_sponzor;
 
   function __construct() {
   }
@@ -14,17 +17,22 @@ class Rang implements JsonSerializable, FieldValidator {
   function get_idRang(){
     return $this->_idRang;
   }
-
   function set_idRang($_idRang){
     $this->_idRang = $_idRang;
   }
 
-  function get_nazivRang(){
-    return $this->_nazivRang;
+  function get_nazivrang(){
+    return $this->_nazivrang;
+  }
+  function set_nazivrang($_nazivrang){
+    $this->_nazivrang = $_nazivrang;
   }
 
-  function set_nazivRang($_nazivRang){
-    $this->_nazivRang = $_nazivRang;
+  function get_sponzor(){
+    return $this->_sponzor;
+  }
+  function set_sponzor($_sponzor){
+    $this->_sponzor = $_sponzor;
   }
 
 
@@ -34,13 +42,17 @@ class Rang implements JsonSerializable, FieldValidator {
 
   public function jsonDeserialize($data) {
     $this->_idRang = $data->{'_idRang'};
-    $this->_nazivRang = $data->{'_nazivRang'};
+    $this->_nazivrang = $data->{'_nazivrang'};
+    $sponzor= new Sponzor();
+    $sponzor->jsonDeserialize($data->{'_sponzor'});
+    $this->_sponzor = $sponzor;
   }
 
   public function ValidateFields()
   {
       $this->_idRang = formatInput($this->_idRang);
-      $this->_nazivRang = formatInput($this->_nazivRang);
+      $this->_nazivrang = formatInput($this->_nazivrang);
+      if ($this->_sponzor!=NULL) $this->_sponzor->ValidateFields();
 
   }
 

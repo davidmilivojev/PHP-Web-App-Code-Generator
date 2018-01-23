@@ -4,6 +4,6 @@
         <server>localhost</server>
         <user>root</user>
         <password></password>
-        <databasename>konferencije_ias</databasename>
+        <databasename>bazatest</databasename>
     </database>
 </configurations>

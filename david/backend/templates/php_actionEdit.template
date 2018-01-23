@@ -1,0 +1,30 @@
+<tr>
+  <td>{{entity.name|capitalize}}:</td>
+  <td>
+   <select name="{{entity.name|capitalize}}">
+      <?php
+
+          $curl = curl_init('http://localhost/david/services/{% for ser in entity.services %}{% for prop in ser.actions %}{% if prop.meths.ga %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}');
+          curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+          $response = curl_exec($curl);
+          $data = json_decode($response);
+          ${% for ser in entity.services %}{% for prop in ser.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} = array();
+
+          for ($i=0; $i<=count($data)-1;$i++)
+          {
+              ${{entity.name|lower}} = new {{entity.name|capitalize}}();
+              ${{entity.name|lower}}->jsonDeserialize($data[$i]);
+              array_push(${% for ser in entity.services %}{% for prop in ser.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}, ${{entity.name|lower}});
+          }
+          foreach(${% for ser in entity.services %}{% for prop in ser.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} as $k):
+        ?>
+        <option value="<?php echo $k->get_{% for prop in entity.properties %}{% if prop.key %}{{prop.name}}{% endif %}{% endfor %}(); ?>"
+           <?php if ($k->get_{% for prop in entity.properties %}{% if prop.key %}{{prop.name}}{% endif %}{% endfor %}() == $varcbx->get_{{entity.name|lower}}()->get_{% for prop in entity.properties %}{% if prop.key %}{{prop.name}}{% endif %}{% endfor %}()) echo " selected"; ?>
+               > <?php echo $k->get_{% for prop in entity.properties %}{% if not prop.key and not prop.addlink and prop.title %}{{prop.name}}{% endif %}{% endfor %}(); ?>
+        </option>
+          <?php
+          endforeach;
+      ?>
+   </select>
+</td>
+</tr>

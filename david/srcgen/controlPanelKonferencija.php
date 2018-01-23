@@ -5,7 +5,6 @@ if (!isset($_SESSION["username"])) header('Location: indexKonferencija.php');
 
 
 require_once '/lib/class/Konferencija.php';
-
 $curl = curl_init('http://localhost/david/services/konferencije');
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($curl);
