@@ -3,9 +3,11 @@ simple example of web app php code generator
 
 ## Requirements:
 ### Generator:
-- python 3
-- textx
-- jinja2
+- python 3  (download from https://www.python.org/)
+- arpeggio  (pip install arpeggio)
+- textx  (pip install textx)
+- jinja2  (pip install jinja2)
+
 ### Generated-App:
 - php 5
 - xampp
