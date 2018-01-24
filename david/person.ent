@@ -1,55 +1,69 @@
 
 WebApp Konferencije[
+  "Ovo je sajt na temu konferencija"
 
-  class +db konferencije_ias{
+  class +db bazatest{
 
-  entity Konferencija !m {
-    $key (idKonferencije)idKonferencija =
-    ^ naziv =
-    opis =
-    rang <idRang>
-    #links[
-      ->nazivRang*
-    ]
-    #dal[
-     dal nesto
-    ]
-    #paths[
-     %c  Rang
-     %d  DAL
-     %d  RangDAL
-    ]
-    #actions[
-     @konferencije : All
-     @konferencija : Read
-     @konferencijepretraga : !PrikaziKonferencijePretraga
-     @izbrisikonferenciju : Delete
-     @izmenikonferenciju : Edit
-     @dodajkonferenciju : Create
-    ]
+    entity Konferencija !m {
+      $key idKonferencija =
+      ^naziv : input = 55
+      opis : desc = 20
+      +Rang <idRang> nazivrang
+      +Sponzor <idSponzor> naziv
+      #actions[
+       @konferencije : views
+       @konferencija : view
+       @dodajkonferenciju : create
+       @izbrisikonferenciju : delete
+       @izmenikonferenciju : edit
+       @konferencijepretraga : !PrikaziKonferencijePretraga
+      ]
+    }
+
+    entity Rang {
+      $key idRang =
+      ^nazivrang : input =
+      +Sponzor <idSponzor> naziv
+      #actions[
+       @rangovi : views
+       @rang : view
+       @rangpretraga : !RangPretaraga
+       @izbrisirang : delete
+       @dodajRang : create
+       @izmenirang : edit
+      ]
+    }
+
+    entity Sponzor {
+      $key idSponzor =
+      ^naziv : input =
+       kompanija : desc =
+      #actions[
+       @sponzori : views
+       @sponzor : view
+       @sponzorpretraga : !SponzorPretaraga
+       @izbrisisponzor : delete
+       @dodajsponzor : create
+       @izmenisponzor : edit
+      ]
+    }
+
+    entity Predavanje !d {
+      $key idPredavanje =
+      ^naziv : input =
+      predavaci : desc =
+      >pocetak : date =
+      kraj : date =
+      +Konferencija <idKonferencija> naziv
+      #actions[
+       @predavanja : views
+       @predavanje : view
+       @predavanjepretraga : !PredavanjePretaraga
+       @izbrisipredavanje : delete
+       @dodajpredavanje : create
+       @izmenipredavanje : edit
+      ]
+    }
+
   }
-
-  entity Rang {
-    $key (idRang)idRang =
-    ^ nazivRang =
-    #paths[
-      %c InterfaceFieldValidator
-      %c inputFormaterCustom
-      %d DAL
-      %d CommonDatabaseMethods
-    ]
-    #actions[
-     @rangovi : All
-     @rang : Read
-     @rangpretraga : !RangPretaraga
-     @izbrisirang : Delete
-    ]
-  }
-
-
-
-  }
-
-
-
 ]

@@ -5,8 +5,14 @@ if (!isset($_SESSION["username"])) header('Location: index{{entity.name}}.php');
 
 
 require_once '/lib/class/{{entity.name}}.php';
-
+{% if entity.detail %}
+$targetURL;
+if (!empty($_GET["search"])) $targetURL = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.custom %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}/?search=".$_GET["search"];
+else $targetURL = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}";
+$curl = curl_init($targetURL);
+{% else %}
 $curl = curl_init('http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}');
+{% endif %}
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($curl);
 $data = json_decode($response);
@@ -49,7 +55,22 @@ for ($i=0; $i<=count($data)-1;$i++)
     <h1>Administracija - {{entity.name}}</h1>
     <div class="wrapper">
       <div class="content">
-        <h4 class="create-konf"><a href="create{{entity.name}}.php">Kreiranje {{entity.name}}</a></h4>
+      {% if entity.detail %}
+        <div class="admin-panel">
+          <form name="trazi-filter" method="GET" action="controlPanel{{entity.name|capitalize}}.php">
+            <select class="filtKonf" name="search">
+              <option value="default">---</option>
+              <?php  require_once "parts/actions/action{% for ent in entity.properties %}{% if ent.addlink %}{{ent.linkname.name|capitalize}}{% endif %}{% endfor %}.php"; ?>
+              </select>
+              <input type="submit" name="filt" value="Filtriraj">
+          </form>
+          <a class="all-events" href="index{{entity.name|capitalize}}.php">Prikazi sve</a>
+          <div class="clr">
+          </div>
+        </div>
+
+        {% endif %}
+        <h4 class="create-konf"><a href="create{{entity.name|capitalize}}.php">Kreiranje {{entity.name}}</a></h4>
         <?php foreach(${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} as $k): ?>
           <div class="access-items">
             <h2 class="access-title control">

@@ -4,8 +4,7 @@
         {% for entity in ent.entities %}
         require_once '../lib/DAL/{{entity.name}}DAL.php';
         {% endfor %}
-        //need to add
-        //require_once '../lib/DAL/KorisnikDAL.php';
+        require_once '../lib/DAL/KorisnikDAL.php';
 
 
 	class API extends REST
@@ -89,13 +88,13 @@
                 {% endfor %}
                 {% for property in enty.properties %}
                 {% if property.addlink %}
-                ${{property.name}}DAL = new {{property.name|capitalize}}DAL();
-                ${{enty.name|lower}}->set_{{property.name}}(${{property.name}}DAL->GetOne((int) $this->_request['{{property.name|capitalize}}']));
+                ${{property.linkname.name|lower}}DAL = new {{property.linkname.name|capitalize}}DAL();
+                ${{enty.name|lower}}->set_{{property.linkname.name|lower}}(${{property.linkname.name|lower}}DAL->GetOne((int) $this->_request['{{property.linkname.name|capitalize}}']));
                 {% endif %}
                 {% endfor %}
 
                 ${{enty.name|lower}}DAL = new {{enty.name|capitalize}}DAL();
-                $succ = ${{enty.name|lower}}DAL->EditOne(${{enty.name|lower}});
+                $succ = ${{enty.name|lower}}DAL->AddOne(${{enty.name|lower}});
                 if (!$succ) $this->response('false', 204);
                 else $this->response('true', 200);
             }
@@ -126,8 +125,8 @@
                 {% endfor %}
                 {% for property in enty.properties %}
                 {% if property.addlink %}
-                ${{property.name}}DAL = new {{property.name|capitalize}}DAL();
-                ${{enty.name|lower}}->set_{{property.name}}(${{property.name}}DAL->GetOne((int) $this->_request['{{property.name|capitalize}}']));
+                ${{property.linkname.name|lower}}DAL = new {{property.linkname.name|capitalize}}DAL();
+                ${{enty.name|lower}}->set_{{property.linkname.name|lower}}(${{property.linkname.name|lower}}DAL->GetOne((int) $this->_request['{{property.linkname.name|capitalize}}']));
                 {% endif %}
                 {% endfor %}
 
@@ -171,10 +170,10 @@
                     $this->response('false', 406);
                 }
 
-                ${% for prop in enty.properties %}{{prop.plural}}{% endfor %} = (int) $this->_request['{% for prop in enty.properties %}{{prop.plural}}{% endfor %}'];
-                if (${% for prop in enty.properties %}{{prop.plural}}{% endfor %} > 0) {
+                ${% for prop in enty.properties %}{% if prop.key %}{{prop.name}}{% endif %}{% endfor %} = (int) $this->_request['{% for prop in enty.properties %}{% if prop.key %}{{prop.name}}{% endif %}{% endfor %}'];
+                if (${% for prop in enty.properties %}{% if prop.key %}{{prop.name}}{% endif %}{% endfor %} > 0) {
                     ${{enty.name|lower}}DAL = new {{enty.name}}DAL();
-                    ${{enty.name|lower}} = ${{enty.name|lower}}DAL->{% if ap.meths.go %}GetOne{% endif %}(${% for prop in enty.properties %}{{prop.plural}}{% endfor %});
+                    ${{enty.name|lower}} = ${{enty.name|lower}}DAL->{% if ap.meths.go %}GetOne{% endif %}(${% for prop in enty.properties %}{% if prop.key %}{{prop.name}}{% endif %}{% endfor %});
                     $result = array();
                     array_push($result, ${{enty.name|lower}});
                     $this->response($this->json($result), 200);
@@ -185,6 +184,68 @@
             {% endfor %}
             {% endfor %}
             {% endfor %}
+
+            // DefaultUser(display/login/logout)
+
+            private function kreirajnalog()
+            {
+                if ($this->get_request_method() != "POST") {
+                    $this->response('false', 406);
+                }
+
+                $korisnik = new Korisnik();
+                $korisnik->set_username((string) $this->_request['username']);
+                $korisnik->set_password((string) $this->_request['password']);
+                $korisnik->set_email((string) $this->_request['email']);
+
+                $korisnikDAL = new KorisnikDAL();
+
+                $succ = $korisnikDAL->AddOne($korisnik);
+                if (!$succ) $this->response('false', 204);
+                else $this->response('true', 200);
+            }
+
+            private function login()
+            {
+                if ($this->get_request_method() != "POST") {
+                    $this->response('false', 406);
+                }
+
+                $username = (string) $this->_request['username'];
+                $password = (string) $this->_request['password'];
+
+                $korisnikDAL = new KorisnikDAL();
+                $korisnik = $korisnikDAL->PronadjiKorisnika($username, $password);
+
+                $result = array();
+                if ($korisnik->get_idKorisnik()>0)
+                {
+                    array_push($result, $korisnik->get_username());
+                    array_push($result, true);
+                }
+                else array_push($result, false);
+                $this->response($this->json($result), 200);
+
+            }
+
+            private function getuserdata()
+            {
+
+              if ($this->get_request_method() != "GET") {
+                  $this->response('false', 406);
+              }
+
+
+              $username = (string) $this->_request['usr'];
+
+              $korisnikDAL = new KorisnikDAL();
+
+              $userdata = $korisnikDAL->GetOne($username);
+              $result = array();
+              array_push($result, $userdata);
+              $this->response($this->json($result), 200);
+            }
+
 
 
           }

@@ -1,0 +1,19 @@
+<?php
+
+${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} = new {% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|capitalize}}{% endif %}{% endfor %}{% endfor %}();
+
+if (!empty($_GET["search"]))
+{
+
+$id = $_GET['search']; // iz url adrese edit.php?id=XXX
+$urlGet = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}/?{% for ent in entity.properties %}{% if not ent.title and ent.key and not ent.addlink  %}{{ent.name}}{% endif %}{% endfor %}=".$id;
+$curl = curl_init($urlGet);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($curl);
+$data = json_decode($response);
+
+${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} = new {% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|capitalize}}{% endif %}{% endfor %}{% endfor %}();
+${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}->jsonDeserialize($data[0]);
+}
+
+?>

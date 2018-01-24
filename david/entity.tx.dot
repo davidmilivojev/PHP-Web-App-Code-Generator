@@ -11,53 +11,53 @@
     edge[dir=black,arrowtail=empty]
 
 
-48801208 -> 48801680[arrowtail=diamond, dir=both, headlabel="entities 1..*"]
-48801208 -> 48802152[arrowtail=diamond, dir=both, headlabel="services 0..*"]
-48801208[ label="{EntityModel|+name:ID\l}"]
+48932280 -> 48932752[arrowtail=diamond, dir=both, headlabel="classes 1..*"]
+48932280[ label="{EntityModel|+name:ID\l+shortDesc:STRING\l}"]
 
-48801680 -> 49086512[arrowtail=diamond, dir=both, headlabel="impls 1..*"]
-48801680 -> 49086984[arrowtail=diamond, dir=both, headlabel="properties 1..*"]
-48801680 -> 49087456[arrowtail=diamond, dir=both, headlabel="requires 1..*"]
-48801680[ label="{Entity|+name:ID\l+implements:STRING\l}"]
+48932752 -> 48933224[arrowtail=diamond, dir=both, headlabel="entities 1..*"]
+48932752[ label="{Class|+cname:ID\l+dbase:STRING\l+name:ID\l}"]
 
-48802152 -> 49086512[arrowtail=diamond, dir=both, headlabel="impls 1..*"]
-48802152 -> 48803096[arrowtail=diamond, dir=both, headlabel="injections 0..*"]
-48802152 -> 48802624[arrowtail=diamond, dir=both, headlabel="methods 0..*"]
-48802152 -> 49087456[arrowtail=diamond, dir=both, headlabel="requires 1..*"]
-48802152[ label="{Service|+name:ID\l+implements:STRING\l}"]
+48933224 -> 48934168[arrowtail=diamond, dir=both, headlabel="properties 1..*"]
+48933224 -> 48933696[arrowtail=diamond, dir=both, headlabel="services 1..*"]
+48933224[ label="{Entity|+name:ID\l+main:STRING\l+detail:STRING\l}"]
 
-48802624[ label="{Method|+pronadji:STRING\l+addone:STRING\l+delete:STRING\l+editone:STRING\l}"]
+48933696 -> 49242160[arrowtail=diamond, dir=both, headlabel="actions 1..*"]
+48933696[ label="{Service|+action:STRING\l}"]
 
-48803096 -> 48801680[headlabel="entity "]
-48803096[ label="{ServInjection|}"]
+48934168 -> 49243104[arrowtail=diamond, dir=both, headlabel="types "]
+48934168 -> 48933224[headlabel="linkname "]
+48934168 -> 48934168[headlabel="linkid "]
+48934168 -> 48934168[headlabel="showby "]
+48934168[ label="{Property|+key:STRING\l+title:STRING\l+sort:STRING\l+name:ID\l+init:STRING\l+numb:INT\l+addlink:STRING\l}"]
 
-49086512[ label="{Implement|+name:ID\l+multi:STRING\l}"]
+49242160 -> 49242632[arrowtail=diamond, dir=both, headlabel="meths "]
+49242160[ label="{Action|+name:ID\l}"]
 
-49086984[ label="{Property|+name:ID\l+valid:ID\l+value:BASETYPE\l+initvalue:STRING\l+initstr:ID\l+initint:INT\l}"]
+49242632[ label="{Method|+ga:STRING\l+de:STRING\l+ad:STRING\l+ed:STRING\l+go:STRING\l+custom:STRING\l+name:ID\l}"]
 
-49087456[ label="{Require|+name:ID\l}"]
+49243104[ label="{Type|+input:STRING\l+textarea:STRING\l+date:STRING\l+time:STRING\l}"]
 
-49087928[ label="{Comment|\\/\\/.*$}"]
+49243576[ label="{Comment|\\/\\/.*$}"]
 
-48781200[ label="{ID|}"]
+48912272[ label="{ID|}"]
 
-48781672[ label="{STRING|}"]
+48912744[ label="{STRING|}"]
 
-48782144[ label="{BOOL|}"]
+48913216[ label="{BOOL|}"]
 
-48782616[ label="{INT|}"]
+48913688[ label="{INT|}"]
 
-48799792[ label="{FLOAT|}"]
+48930864[ label="{FLOAT|}"]
 
-48800264[ label="{NUMBER|}"]
-48800264 -> 48799792 [dir=back]
-48800264 -> 48782616 [dir=back]
+48931336[ label="{NUMBER|}"]
+48931336 -> 48930864 [dir=back]
+48931336 -> 48913688 [dir=back]
 
-48800736[ label="{BASETYPE|}"]
-48800736 -> 48800264 [dir=back]
-48800736 -> 48782144 [dir=back]
-48800736 -> 48781200 [dir=back]
-48800736 -> 48781672 [dir=back]
+48931808[ label="{BASETYPE|}"]
+48931808 -> 48931336 [dir=back]
+48931808 -> 48913216 [dir=back]
+48931808 -> 48912272 [dir=back]
+48931808 -> 48912744 [dir=back]
 
 
 }

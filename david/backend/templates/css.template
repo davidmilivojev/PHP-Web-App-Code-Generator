@@ -131,11 +131,16 @@ form[name="kreirajnalog"]{
 
 }
 
-form[action="index.php"]{
+form[name="trazi"]{
   width: 100%;
   max-width: 300px;
   float: right;
   padding: 15px 0px;
+}
+
+form[name="trazi-filter"]{
+  max-width: 300px;
+  float: right;
 }
 
 
@@ -169,7 +174,7 @@ input[value="Kreiraj nalog"]{
 
 .banner{
   width: 100%;
-  max-height: 300px;
+  /* max-height: 300px; */
 }
 
 .index-items{
@@ -271,7 +276,7 @@ input[value="Snimi"]{
 
 option,
 textarea,
-input[name="Naziv"]{
+input[alt="inp"]{
   background: #54dd96;
   width: 100%;
   max-width: 300px;

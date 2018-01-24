@@ -1,26 +1,26 @@
-
 <?php
-{% for ent in entity.services %}
-{% for reqs in ent.paths %}
-  {% if reqs.pathclass %}
-require_once '{{reqs.name}}.php';
+{% for property in entity.properties %}
+  {% if property.addlink %}
+require_once '{{property.linkname.name|capitalize}}.php';
   {% endif %}
 {% endfor %}
-{% endfor %}
+
+require_once 'InterfaceFieldValidator.php';
+require_once 'inputFormaterCustom.php';
+
 
 class {{entity.name}} implements JsonSerializable, FieldValidator {
 
   {% for property in entity.properties %}
   {% if property.init %}
-  {% if not property.key and not property.initStr %}
+  {% if not property.key %}
   protected  $_{{property.name}}="";
   {% endif %}
   {% if property.key %}
   protected  $_{{property.name}}=0;
   {% endif %}
-  {% if property.initStr %}
-  protected  $_{{property.name}}="{{property.initStr}}";
-  {% endif %}
+  {% elif property.addlink %}
+  protected  $_{{property.linkname.name|lower}};
   {% else %}
   protected  $_{{property.name}};
   {% endif %}
@@ -30,12 +30,21 @@ class {{entity.name}} implements JsonSerializable, FieldValidator {
   }
 
   {% for property in entity.properties %}
+  {% if property.addlink %}
+  function get_{{property.linkname.name|lower}}(){
+    return $this->_{{property.linkname.name|lower}};
+    {% else %}
   function get_{{property.name}}(){
     return $this->_{{property.name}};
+    {% endif %}
   }
-
+  {% if property.addlink %}
+  function set_{{property.linkname.name|lower}}($_{{property.linkname.name|lower}}){
+    $this->_{{property.linkname.name|lower}} = $_{{property.linkname.name|lower}};
+  {% else %}
   function set_{{property.name}}($_{{property.name}}){
     $this->_{{property.name}} = $_{{property.name}};
+  {% endif %}
   }
 
   {% endfor %}
@@ -47,9 +56,9 @@ class {{entity.name}} implements JsonSerializable, FieldValidator {
   public function jsonDeserialize($data) {
     {% for property in entity.properties %}
     {% if property.addlink %}
-    ${{property.name}}= new {{property.name | capitalize}}();
-    ${{property.name}}->jsonDeserialize($data->{'_{{property.name}}'});
-    $this->_{{property.name}} = ${{property.name}};
+    ${{property.linkname.name|lower}}= new {{property.linkname.name | capitalize}}();
+    ${{property.linkname.name|lower}}->jsonDeserialize($data->{'_{{property.linkname.name|lower}}'});
+    $this->_{{property.linkname.name|lower}} = ${{property.linkname.name|lower}};
     {% else %}
     $this->_{{property.name}} = $data->{'_{{property.name}}'};
     {% endif %}
@@ -60,7 +69,7 @@ class {{entity.name}} implements JsonSerializable, FieldValidator {
   {
     {% for property in entity.properties %}
       {% if property.addlink %}
-      if ($this->_{{property.name}}!=NULL) $this->_{{property.name}}->ValidateFields();
+      if ($this->_{{property.linkname.name|lower}}!=NULL) $this->_{{property.linkname.name|lower}}->ValidateFields();
       {% else %}
       $this->_{{property.name}} = formatInput($this->_{{property.name}});
       {% endif %}

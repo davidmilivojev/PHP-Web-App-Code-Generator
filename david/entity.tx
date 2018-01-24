@@ -5,54 +5,44 @@
 
 EntityModel:
     'WebApp' name=ID '['
+    (shortDesc=STRING)?
         classes+=Class
     ']'
 ;
 
 Class:
-  'class' ('+db' name=ID)? '{'
+  'class' (dbase='+db' name=ID)? '{'
     entities+=Entity
   '}'
 ;
 
 Entity:
-    'entity' name=ID (main='!m')? '{'
+    'entity' name=ID (main='!m' | detail='!d')? '{'
         properties+=Property
-        services*=Service
+        services+=Service
     '}'
 ;
 
 Service:
-  ('#' (path='paths' | dal='dal' | action='actions' | link='links' )* '['
-  links*=Link
-  paths*=Path
-  dals*=Dal
-  actions*=Action
+  ('#' ( action='actions' )* '['
+  actions+=Action
   ']')?
 ;
 
 Property:
-    (key='$key')* ('('plural=ID ')')? (title='^')? name=ID  ((addlink='<' linkid=ID '>')? | init='=' (initStr=STRING)? )?
-;
-
-Dal:
-  'dal' name=ID
+    (key='$key')? (title='^' | sort='>')? (name=ID (':' types=Type)? ( init='=' (numb=INT)? )?) | (addlink='+' linkname=[Entity] '<' linkid=[Property] '>' showby=[Property])?
 ;
 
 Action:
   '@' name=ID ':' meths=Method
 ;
 
-Path:
-  (pathclass='%c' | pathdal='%d')? name=ID
-;
-
-Link:
-  '->' name=ID by='*'
-;
-
 Method:
-  ga='All' | de='Delete' | ad='Create' | ed='Edit' | go='Read' | (custom='!' name=ID)?
+  ga='views' | de='delete' | ad='create' | ed='edit' | go='view' | (custom='!' name=ID)?
+;
+
+Type:
+  input='input'  | textarea='desc' | date='date' | time='time'
 ;
 
 Comment:

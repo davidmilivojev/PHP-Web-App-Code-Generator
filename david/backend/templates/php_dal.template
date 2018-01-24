@@ -1,12 +1,12 @@
 <?php
 require_once '../lib/class/{{entity.name}}.php';
-{% for ent in entity.services %}
-{% for reqs in ent.paths %}
-  {% if reqs.pathdal %}
-require_once '../lib/DAL/{{reqs.name}}.php';
+require_once '../lib/DAL/DAL.php';
+{% for property in entity.properties %}
+  {% if property.addlink %}
+require_once '../lib/DAL/{{property.linkname.name|capitalize}}DAL.php';
   {% endif %}
 {% endfor %}
-{% endfor %}
+require_once '../lib/DAL/CommonDatabaseMethods.php';
 
 class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
 {
@@ -16,8 +16,22 @@ class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
   }
 
 
-
   function {% for ser in entity.services %}{% for ap in ser.actions %}{% if ap.meths.custom %}{{ap.meths.name}}{% endif %}{% endfor %}{% endfor %}($search){
+
+    {% if entity.main %}
+    $temp{{entity.name|capitalize}} = new {{entity.name|capitalize}}();
+    $temp{{entity.name|capitalize}}->set_{% for property in entity.properties %}{% if property.title %}{{property.name}}{% endif %}{% endfor %}($search);
+    $temp{{entity.name|capitalize}}->ValidateFields();
+
+    $sqlQuery="SELECT * FROM {{entity.name|capitalize}} WHERE {% for property in entity.properties %}{% if property.title %}{{property.name|capitalize}}{% endif %}{% endfor %} LIKE :searchBy{{entity.name|capitalize}}";
+    $params = array(":searchBy{{entity.name|capitalize}}"=>"%".$temp{{entity.name|capitalize}}->get_{% for property in entity.properties %}{% if property.title %}{{property.name}}{% endif %}{% endfor %}()."%");
+    {% endif %}
+
+    {% if entity.detail %}
+    $sqlQuery="SELECT * FROM {{entity.name|capitalize}} WHERE {% for property in entity.properties %}{% if property.addlink %}{{property.linkname.name|capitalize}}{% endif %}{% endfor %} = :{% for property in entity.properties %}{% if property.addlink %}{{property.linkname.name|capitalize}}{% endif %}{% endfor %} ORDER BY {% for property in entity.properties %}{% if property.sort %}{{property.name|capitalize}}{% endif %}{% endfor %} asc";
+    $params = array(":{% for property in entity.properties %}{% if property.addlink %}{{property.linkname.name|capitalize}}{% endif %}{% endfor %}"=>$search);
+
+    {% endif %}
     $results = $this->IzvrsiUpit($sqlQuery,$params);
 
     ${{entity.name|lower}}Results = array();
@@ -38,8 +52,8 @@ class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
 
         {% for property in entity.properties %}
         {% if property.addlink %}
-        ${{property.name}}DAL = new {{property.name|capitalize}}DAL();
-        ${{entity.name|lower}}Result->set_{{property.name}}(${{property.name}}DAL->GetOne($k->{{property.name|capitalize}}));
+        ${{property.linkname.name|lower}}DAL = new {{property.linkname.name|capitalize}}DAL();
+        ${{entity.name|lower}}Result->set_{{property.linkname.name|lower}}(${{property.linkname.name|lower}}DAL->GetOne($k->{{property.linkname.name|capitalize}}));
         {% endif %}
         {% endfor %}
         ${{entity.name|lower}}Results[] = ${{entity.name|lower}}Result;
@@ -55,8 +69,8 @@ class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
 
     $object->ValidateFields();
 
-    $sqlQuery="INSERT INTO {{entity.name}}({% for property in entity.properties %}{% if not property.key %}{{property.name|capitalize}}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %}) VALUES({% for property in entity.properties %}{% if not property.key %}:{{property.name}}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %})";
-    $params = array({% for property in entity.properties %}{% if not property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% if property.linkid %}->get_{{property.linkid}}(){% endif %}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %});
+    $sqlQuery="INSERT INTO {{entity.name}}({% for property in entity.properties %}{% if not property.key and not property.addlink %}{{property.name|capitalize}}{% if not loop.last %}, {% endif %}{% endif %}{% if property.addlink %}{{property.linkname.name|capitalize}}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %}) VALUES({% for property in entity.properties %}{% if not property.key and not property.addlink %}:{{property.name}}{% if not loop.last %}, {% endif %}{% endif %}{% if property.addlink %}:{{property.linkname.name|lower}}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %})";
+    $params = array({% for property in entity.properties %}{% if not property.key and not property.addlink %}":{{property.name}}"=>$object->get_{{property.name}}(){% if not loop.last %}, {% endif %}{% endif %}{% if property.addlink %}":{{property.linkname.name|lower}}"=>$object->get_{{property.linkname.name|lower}}()->get_{{property.linkid.name}}(){% if not loop.last %}, {% endif %}{% endif %}{% endfor %});
     return $this->IzvrsiUpit($sqlQuery, $params);
 
   }
@@ -64,8 +78,8 @@ class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
   public function DeleteOne($object){
 
     $object->ValidateFields();
-    $sqlQuery="DELETE FROM {{entity.name}} WHERE {% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %} = :{% for property in entity.properties %}{% if property.plural %}{{property.plural}}{% endif %}{% endfor %}";
-    $params = array(":{% for property in entity.properties %}{% if property.plural %}{{property.plural}}{% endif %}{% endfor %}"=>$object->get_{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}());
+    $sqlQuery="DELETE FROM {{entity.name}} WHERE {% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %} = :{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}";
+    $params = array(":{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}"=>$object->get_{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}());
     return $this->IzvrsiUpit($sqlQuery, $params);
 
   }
@@ -73,8 +87,8 @@ class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
   public function EditOne($object){
     $object->ValidateFields();
 
-    $sqlQuery="UPDATE {{entity.name}} SET {% for property in entity.properties %}{% if not property.key %}{{property.name|capitalize}} = :{{property.name}}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %} WHERE {% for property in entity.properties %}{% if property.key %}{{property.name}} = :{{property.name}}{% endif %}{% endfor %}";
-    $params = array({% for property in entity.properties %}{% if not property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% if property.linkid %}->get_{{property.linkid}}(){% endif %}{% else %}{% if property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% endif %}{% endif %}{% if not loop.last %},{% endif %}{% endfor %});
+    $sqlQuery="UPDATE {{entity.name}} SET {% for property in entity.properties %}{% if not property.key and not property.addlink %}{{property.name|capitalize}} = :{{property.name}}{% if not loop.last %}, {% endif %}{% endif %}{% if property.addlink %}{{property.linkname.name|capitalize}} = :{{property.linkname.name|lower}}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %} WHERE {% for property in entity.properties %}{% if property.key %}{{property.name}} = :{{property.name}}{% endif %}{% endfor %}";
+    $params = array({% for property in entity.properties %}{% if not property.key and not property.addlink %}":{{property.name}}"=>$object->get_{{property.name}}(){% else %}{% if property.key %}":{{property.name}}"=>$object->get_{{property.name}}(){% endif %}{% if property.addlink %}":{{property.linkname.name|lower}}"=>$object->get_{{property.linkname.name|lower}}()->get_{{property.linkid.name}}(){% endif %}{% endif %}{% if not loop.last %},{% endif %}{% endfor %});
     return $this->IzvrsiUpit($sqlQuery, $params);
   }
 
@@ -102,8 +116,8 @@ class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
 
         {% for property in entity.properties %}
         {% if property.addlink %}
-        ${{property.name}}DAL = new {{property.name|capitalize}}DAL();
-        ${{entity.name|lower}}Result->set_{{property.name}}(${{property.name}}DAL->GetOne($k->{{property.name|capitalize}}));
+        ${{property.linkname.name|lower}}DAL = new {{property.linkname.name|capitalize}}DAL();
+        ${{entity.name|lower}}Result->set_{{property.linkname.name|lower}}(${{property.linkname.name|lower}}DAL->GetOne($k->{{property.linkname.name|capitalize}}));
         {% endif %}
         {% endfor %}
         ${{entity.name|lower}}Results[] = ${{entity.name|lower}}Result;
@@ -117,6 +131,7 @@ class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
 
     ${{entity.name|lower}}Result = new {{entity.name|capitalize}}();
     ${{entity.name|lower}}Result->set_{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}($object);
+
 
     $sqlQuery="SELECT * FROM {{entity.name}} WHERE {% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %} = :{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}";
     $params = array(":{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}" =>${{entity.name|lower}}Result->get_{% for property in entity.properties %}{% if property.key %}{{property.name}}{% endif %}{% endfor %}());
@@ -140,8 +155,8 @@ class {{entity.name}}DAL extends DAL implements CommonDatabaseMethods
 
         {% for property in entity.properties %}
         {% if property.addlink %}
-        ${{property.name}}DAL = new {{property.name|capitalize}}DAL();
-        ${{entity.name|lower}}Result->set_{{property.name}}(${{property.name}}DAL->GetOne($k->{{property.name|capitalize}}));
+        ${{property.linkname.name|lower}}DAL = new {{property.linkname.name|capitalize}}DAL();
+        ${{entity.name|lower}}Result->set_{{property.linkname.name|lower}}(${{property.linkname.name|lower}}DAL->GetOne($k->{{property.linkname.name|capitalize}}));
         {% endif %}
         {% endfor %}
     }
