@@ -11,7 +11,7 @@ EntityModel:
 ;
 
 Class:
-  'class' (cname=ID)? (dbase='+db' name=ID)? '{'
+  'class' (dbase='+db' name=ID)? '{'
     entities+=Entity
   '}'
 ;
