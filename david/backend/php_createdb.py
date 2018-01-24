@@ -31,12 +31,13 @@ def php_createdb(this_folder, debug):
     # Register filter for mapping Entity type names to Java type names.
 
 
-    # Load Java template
     template = jinja_env.get_template('backend/templates/php_createdb.template')
     for db in person_model.classes:
+        if db.name:
             with open(join(srcgen_folder,
                                "%s.php" % 'createdatabase'), 'w') as f:
                     f.write(template.render(db=db))
+
 
 
 if __name__ == "__main__":

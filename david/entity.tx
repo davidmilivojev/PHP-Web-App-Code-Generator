@@ -24,13 +24,13 @@ Entity:
 ;
 
 Service:
-  ('#' ( action='actions' )* '['
-  actions+=Action
-  ']')?
+  action='#actions' '['
+    actions+=Action
+  ']'
 ;
 
 Property:
-    (key='$key')? (title='^' | sort='>')? (name=ID (':' types=Type)? ( init='=' (numb=INT)? )?) | (addlink='+' linkname=[Entity] '<' linkid=[Property] '>' showby=[Property])?
+    (key='$key')? ((title='^' | sort='>')? name=ID (':' types=Type)? ( init='=' (numb=INT)? )?) | (addlink='+' linkname=[Entity] '<' linkid=[Property] '>' showby=[Property])?
 ;
 
 Action:
