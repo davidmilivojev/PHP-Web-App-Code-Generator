@@ -13,7 +13,10 @@ simple example of web app php code generator
 - xampp
 - mysql
 
-## Instalation:
+## Instruction:
+- before you run generator please read word document 'Gen - instruction'
+
+## Instalation & Run:
 ### Generator:
 - open file 'person.ent' in editor (atom, notepad++, brackets..)
 - write your example
@@ -27,3 +30,4 @@ simple example of web app php code generator
 - run xampp and press start 'Apache' and 'MySQL'
 - type in browser http://localhost/david/createdatabase.php
 - type in browser http://localhost/david/index.php
+

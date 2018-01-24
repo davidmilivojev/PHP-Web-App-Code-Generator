@@ -1,69 +1,21 @@
 
-WebApp Konferencije[
-  "Ovo je sajt na temu konferencija"
+WebApp Example[
+  "this is example"
 
-  class +db bazatest{
+  class +db databasename{
 
-    entity Konferencija !m {
-      $key idKonferencija =
-      ^naziv : input = 55
-      opis : desc = 20
-      +Rang <idRang> nazivrang
-      +Sponzor <idSponzor> naziv
+    entity Example {
+      $key idExample =
+      ^name : input = 55
+      description : desc = 20
       #actions[
-       @konferencije : views
-       @konferencija : view
-       @dodajkonferenciju : create
-       @izbrisikonferenciju : delete
-       @izmenikonferenciju : edit
-       @konferencijepretraga : !PrikaziKonferencijePretraga
+       @name : views
+       @names : view
+       @addname : create
+       @delname : delete
+       @editname : edit
+       @searchnames : !search
       ]
     }
-
-    entity Rang {
-      $key idRang =
-      ^nazivrang : input =
-      +Sponzor <idSponzor> naziv
-      #actions[
-       @rangovi : views
-       @rang : view
-       @rangpretraga : !RangPretaraga
-       @izbrisirang : delete
-       @dodajRang : create
-       @izmenirang : edit
-      ]
-    }
-
-    entity Sponzor {
-      $key idSponzor =
-      ^naziv : input =
-       kompanija : desc =
-      #actions[
-       @sponzori : views
-       @sponzor : view
-       @sponzorpretraga : !SponzorPretaraga
-       @izbrisisponzor : delete
-       @dodajsponzor : create
-       @izmenisponzor : edit
-      ]
-    }
-
-    entity Predavanje !d {
-      $key idPredavanje =
-      ^naziv : input =
-      predavaci : desc =
-      >pocetak : date =
-      kraj : date =
-      +Konferencija <idKonferencija> naziv
-      #actions[
-       @predavanja : views
-       @predavanje : view
-       @predavanjepretraga : !PredavanjePretaraga
-       @izbrisipredavanje : delete
-       @dodajpredavanje : create
-       @izmenipredavanje : edit
-      ]
-    }
-
   }
 ]
