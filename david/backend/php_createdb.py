@@ -34,6 +34,7 @@ def php_createdb(this_folder, debug):
     # Load Java template
     template = jinja_env.get_template('backend/templates/php_createdb.template')
     for db in person_model.classes:
+        if db.name:
             with open(join(srcgen_folder,
                                "%s.php" % 'createdatabase'), 'w') as f:
                     f.write(template.render(db=db))

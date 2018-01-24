@@ -24,8 +24,8 @@ Entity:
 ;
 
 Service:
-  (action='#actions')* '['
-  actions+=Action
+  action='#actions' '['
+    actions+=Action
   ']'
 ;
 
