@@ -1,6 +1,6 @@
 <?php
 
-     $curl = curl_init('http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}');
+     $curl = curl_init('http://localhost/{{entity._model_name}}/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}');
      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
      $response = curl_exec($curl);
      $data = json_decode($response);

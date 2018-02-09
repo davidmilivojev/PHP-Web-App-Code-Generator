@@ -2,8 +2,8 @@
 require_once '/lib/class/{{entity.name}}.php';
 
 $targetURL;
-if (!empty($_GET["search"])) $targetURL = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.custom %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}/?search=".$_GET["search"];
-else $targetURL = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}";
+if (!empty($_GET["search"])) $targetURL = "http://localhost/{{entity._model_name}}/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.custom %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}/?search=".$_GET["search"];
+else $targetURL = "http://localhost/{{entity._model_name}}/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}";
 
 $curl = curl_init($targetURL);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -16,7 +16,7 @@ for ($i=0; $i<=count($data)-1;$i++)
 {
     ${{entity.name|lower}} = new {{entity.name|capitalize}}();
     ${{entity.name|lower}}->jsonDeserialize($data[$i]);
-    array_push(${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}, ${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %});
+    array_push(${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}, ${{entity.name|lower}});
 }
 
 ?>
@@ -28,7 +28,7 @@ for ($i=0; $i<=count($data)-1;$i++)
 <html>
   <head>
     <meta charset="utf-8">
-    <title>david</title>
+    <title>{{entity._model_name}}</title>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>

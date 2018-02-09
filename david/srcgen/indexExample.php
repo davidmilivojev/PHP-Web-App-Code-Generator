@@ -1,22 +1,22 @@
 <?php
-require_once '/lib/class/Konferencija.php';
+require_once '/lib/class/Example.php';
 
 $targetURL;
-if (!empty($_GET["search"])) $targetURL = "http://localhost/david/services/konferencijepretraga/?search=".$_GET["search"];
-else $targetURL = "http://localhost/david/services/konferencije";
+if (!empty($_GET["search"])) $targetURL = "http://localhost/appname/services/searchnames/?search=".$_GET["search"];
+else $targetURL = "http://localhost/appname/services/names";
 
 $curl = curl_init($targetURL);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($curl);
 $data = json_decode($response);
 
-$konferencije = array();
+$names = array();
 
 for ($i=0; $i<=count($data)-1;$i++)
 {
-    $konferencija = new Konferencija();
-    $konferencija->jsonDeserialize($data[$i]);
-    array_push($konferencije, $konferencija);
+    $example = new Example();
+    $example->jsonDeserialize($data[$i]);
+    array_push($names, $example);
 }
 
 ?>
@@ -25,7 +25,7 @@ for ($i=0; $i<=count($data)-1;$i++)
 <html>
   <head>
     <meta charset="utf-8">
-    <title>david</title>
+    <title>appname</title>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
@@ -48,17 +48,15 @@ for ($i=0; $i<=count($data)-1;$i++)
         </div>
       </header>
     <img class="banner" src="images/banner.svg" alt="">
-    <h1>Lista Konferencija</h1>
+    <h1>Lista Example</h1>
     <div class="wrapper">
       <div class="content">
-        	<?php foreach($konferencije as $k): ?>
+        	<?php foreach($names as $k): ?>
             <div class="index-items">
               <div class="index-item-header">
               </div>
-              <h2>Naziv: <?php echo $k->get_naziv(); ?></h2>
-              <p>Opis: <?php echo $k->get_opis(); ?></p>
-              <p>Rang: <?php echo $k->get_rang()->get_nazivrang(); ?></p>
-              <p>Sponzor: <?php echo $k->get_sponzor()->get_naziv(); ?></p>
+              <h2>Name: <?php echo $k->get_name(); ?></h2>
+              <p>Description: <?php echo $k->get_description(); ?></p>
             </div>
           <?php endforeach; ?>
       </div>

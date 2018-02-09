@@ -1,22 +1,22 @@
 <?php
 
 if(!isset($_SESSION)) session_start();
-if (!isset($_SESSION["username"])) header('Location: indexSponzor.php');
+if (!isset($_SESSION["username"])) header('Location: indexExample.php');
 
-require_once '/lib/class/Sponzor.php';
+require_once '/lib/class/Example.php';
 
 if (!empty($_POST['action']))
 {
 
-   $urlPOST = "http://localhost/david/services/dodajsponzor";
+   $urlPOST = "http://localhost/appname/services/addname";
    $curl_post_data = array(
-        'Naziv' => $_POST['Naziv'],         'Kompanija' => $_POST['Kompanija']    );
+        'Name' => $_POST['Name'],         'Description' => $_POST['Description']    );
    $curl = curl_init($urlPOST);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
    curl_setopt($curl, CURLOPT_POST, true);
    curl_setopt($curl, CURLOPT_POSTFIELDS, $curl_post_data);
    $response = curl_exec($curl);
-   if ($response) header('Location: /david/controlPanelSponzor.php');
+   if ($response) header('Location: /appname/controlPanelExample.php');
 
 }
 
@@ -26,7 +26,7 @@ if (!empty($_POST['action']))
 <html>
   <head>
     <meta charset="utf-8">
-    <title>david</title>
+    <title>appname</title>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
@@ -49,18 +49,18 @@ if (!empty($_POST['action']))
         </div>
     </header>
   <img class="banner" src="images/banner.svg" alt="">
-  <h1>Kreiranje Sponzor</h1>
+  <h1>Kreiranje Example</h1>
   <div class="wrapper">
       <div class="content">
-          <form name="konf"method="post" action="createSponzor.php">
+          <form name="konf"method="post" action="createExample.php">
           <table>
             <tr>
-              <td>Naziv:</td>
-              <td><input type="text" alt="inp" size="40" name="Naziv" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
+              <td>Name:</td>
+              <td><input type="text" alt="inp" size="40" name="Name" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
             </tr>
             <tr>
-              <td valign="top">Kompanija:</td>
-              <td><textarea name="Kompanija" cols="30" rows="5" required oninvalid="setCustomValidity('Unesite opis konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}"></textarea></td>
+              <td valign="top">Description:</td>
+              <td><textarea name="Description" cols="30" rows="5" required oninvalid="setCustomValidity('Unesite opis konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}"></textarea></td>
             </tr>
             <tr>
               <td colspan="2" align="center">

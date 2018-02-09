@@ -2,7 +2,7 @@
 
 if (!empty($_POST['username']) && !empty($_POST['password']))
 {
-   $urlPOST = "http://localhost/david/services/login";
+   $urlPOST = "http://localhost/appname/services/login";
    $curl_post_data = array(
         'username' => $_POST['username'],
         'password' => $_POST['password'],
@@ -20,17 +20,17 @@ if (!empty($_POST['username']) && !empty($_POST['password']))
            // create session
            session_start();
            $_SESSION["username"]=$out[0];
-           header('Location: controlPanelKonferencija.php');
+           header('Location: controlPanelExample.php');
        }
        else
        {
-           header('Location: indexKonferencija.php');
+           header('Location: indexExample.php');
        }
    }
    else
    {
        // obavestiti korisnika o neuspelom logovanju
-       if ($out[0]==false) header('Location: indexKonferencija.php');
+       if ($out[0]==false) header('Location: indexExample.php');
    }
 
 }
@@ -40,7 +40,7 @@ if (!empty($_POST['username']) && !empty($_POST['password']))
 <html>
   <head>
     <meta charset="utf-8">
-    <title>david</title>
+    <title>appname</title>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>

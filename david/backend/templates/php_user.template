@@ -1,7 +1,7 @@
 <?php
     require_once '/lib/class/Korisnik.php';
     session_start();
-    $targetURL = "http://localhost/david/services/getuserdata/?usr=".$_SESSION["username"];
+    $targetURL = "http://localhost/{{entity._model_name}}/services/getuserdata/?usr=".$_SESSION["username"];
 
     $curl = curl_init($targetURL);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -13,7 +13,7 @@
 
     ${{ent.name|lower}} = new Korisnik();
     ${{ent.name|lower}}->jsonDeserialize($data[0]);
-    array_push(${% for ents in ent.services %}{% for prop in ents.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}, $konferencija);
+    array_push(${% for ents in ent.services %}{% for prop in ents.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}, ${% for ent in entity.entities %}{% if ent.main %}{{ent.name|lower}}{% endif %}{% endfor %});
 ?>
 {% endif %}
 {% endfor %}
@@ -21,7 +21,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>david</title>
+    <title>{{entity._model_name}}</title>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>

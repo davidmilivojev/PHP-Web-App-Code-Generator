@@ -7,11 +7,11 @@ if (!isset($_SESSION["username"])) header('Location: index{{entity.name}}.php');
 require_once '/lib/class/{{entity.name}}.php';
 {% if entity.detail %}
 $targetURL;
-if (!empty($_GET["search"])) $targetURL = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.custom %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}/?search=".$_GET["search"];
-else $targetURL = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}";
+if (!empty($_GET["search"])) $targetURL = "http://localhost/{{entity._model_name}}/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.custom %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}/?search=".$_GET["search"];
+else $targetURL = "http://localhost/{{entity._model_name}}/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}";
 $curl = curl_init($targetURL);
 {% else %}
-$curl = curl_init('http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}');
+$curl = curl_init('http://localhost/{{entity._model_name}}/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}');
 {% endif %}
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($curl);
@@ -29,7 +29,7 @@ for ($i=0; $i<=count($data)-1;$i++)
 <html>
   <head>
     <meta charset="utf-8">
-    <title>david</title>
+    <title>{{entity._model_name}}</title>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>

@@ -1,0 +1,50 @@
+/*
+  Entity DSL grammar.
+    Author: David Milivojev
+*/
+
+EntityModel:
+    'WebApp' name=ID '['
+    (shortDesc=STRING)?
+        classes+=Class
+    ']'
+;
+
+Class:
+  'class' (dbase='+db' name=ID)? '{'
+    entities+=Entity
+  '}'
+;
+
+Entity:
+    'entity' name=ID (main='!m' | detail='!d')? '{'
+        properties+=Property
+        services+=Service
+    '}'
+;
+
+Service:
+  action='#actions' '['
+    actions+=Action
+  ']'
+;
+
+Property:
+    (key='$key')? ((title='^' | sort='>')? name=ID (':' types=Type)? ( init='=' (numb=INT)? )?) | (addlink='+' linkname=[Entity] '<' linkid=[Property] '>' showby=[Property])?
+;
+
+Action:
+  '@' name=ID ':' meths=Method
+;
+
+Method:
+  ga='views' | de='delete' | ad='create' | ed='edit' | go='view' | (custom='!' name=ID)?
+;
+
+Type:
+  input='input'  | textarea='desc' | date='date' | time='time'
+;
+
+Comment:
+    /\/\/.*$/
+;

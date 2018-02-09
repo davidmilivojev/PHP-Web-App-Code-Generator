@@ -1,23 +1,23 @@
 <?php
     require_once '/lib/class/Korisnik.php';
     session_start();
-    $targetURL = "http://localhost/david/services/getuserdata/?usr=".$_SESSION["username"];
+    $targetURL = "http://localhost/appname/services/getuserdata/?usr=".$_SESSION["username"];
 
     $curl = curl_init($targetURL);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($curl);
     $data = json_decode($response);
-    $konferencije = array();
+    $names = array();
 
-    $konferencija = new Korisnik();
-    $konferencija->jsonDeserialize($data[0]);
-    array_push($konferencije, $konferencija);
+    $example = new Korisnik();
+    $example->jsonDeserialize($data[0]);
+    array_push($names, $example);
 ?>
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>david</title>
+    <title>appname</title>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
@@ -48,10 +48,10 @@
           </div>
         <?php
           echo "<h2>Korisnik: ";
-          echo $konferencije[0]->get_username();
+          echo $names[0]->get_username();
           echo "</h2>";
           echo "<h2>E-mail: ";
-          echo $konferencije[0]->get_email();
+          echo $names[0]->get_email();
           echo "</h2>";
         ?>
         </div>

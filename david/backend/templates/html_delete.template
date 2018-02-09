@@ -3,7 +3,7 @@
 if(!isset($_SESSION)) session_start();
 if (!isset($_SESSION["username"])) header('Location: index{{entity.name}}.php');
 
-$urlPOST = "http://localhost/david/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.de %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}";
+$urlPOST = "http://localhost/{{entity._model_name}}/services/{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.de %}{{prop.name}}{% endif %}{% endfor %}{% endfor %}";
    $curl_post_data = array(
         'id' => $_POST['id']
         );
@@ -12,6 +12,6 @@ $urlPOST = "http://localhost/david/services/{% for ent in entity.services %}{% f
    curl_setopt($curl, CURLOPT_POST, true);
    curl_setopt($curl, CURLOPT_POSTFIELDS, $curl_post_data);
    $response = curl_exec($curl);
-   if ($response) header('Location: /david/controlPanel{{entity.name}}.php');
+   if ($response) header('Location: /{{entity._model_name}}/controlPanel{{entity.name}}.php');
 
 ?>

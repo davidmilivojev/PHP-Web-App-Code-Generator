@@ -34,6 +34,7 @@ def html_delete(this_folder, debug):
         for entity in ent.entities:
             for ser in entity.services:
                 for act in ser.actions:
+                    entity._model_name = person_model.name
                     if act.meths.de:
                         with open(join(srcgen_folder,
                                        "delete%s.php" % entity.name.capitalize()), 'w') as f:

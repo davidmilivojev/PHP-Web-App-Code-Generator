@@ -34,9 +34,10 @@ def php_user(this_folder, debug):
     # Load Java template
     template = jinja_env.get_template('backend/templates/php_user.template')
     for entity in person_model.classes:
-            with open(join(srcgen_folder,
-                           "%s.php" % 'user'), 'w') as f:
-                f.write(template.render(entity=entity))
+        entity._model_name = person_model.name
+        with open(join(srcgen_folder,
+                       "%s.php" % 'user'), 'w') as f:
+            f.write(template.render(entity=entity))
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 
 if (!empty($_POST['username']) && !empty($_POST['password']) && !empty($_POST['email']))
 {
-   $urlPOST = "http://localhost/david/services/kreirajnalog";
+   $urlPOST = "http://localhost/appname/services/kreirajnalog";
    $curl_post_data = array(
         'username' => $_POST['username'],
         'password' => $_POST['password'],
@@ -18,9 +18,9 @@ if (!empty($_POST['username']) && !empty($_POST['password']) && !empty($_POST['e
        // create session
        session_start();
        $_SESSION["username"]=$_POST['username'];
-       header('Location: /david/controlPanelKonferencija.php');
+       header('Location: /appname/controlPanelExample.php');
    }
-   else header('Location: indexKonferencija.php');
+   else header('Location: indexExample.php');
 }
 
 ?>
@@ -29,7 +29,7 @@ if (!empty($_POST['username']) && !empty($_POST['password']) && !empty($_POST['e
 <html>
   <head>
     <meta charset="utf-8">
-    <title>david</title>
+    <title>appname</title>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>

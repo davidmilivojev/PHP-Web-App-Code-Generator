@@ -44,10 +44,10 @@ def php_actions(this_folder, debug):
 
     for ent in person_model.classes:
         for entity in ent.entities:
-            # For each entity generate java file
-                with open(join(srcgen_folder,
-                               "action%s.php" % entity.name.capitalize()), 'w') as f:
-                    f.write(template.render(entity=entity))
+            entity._model_name = person_model.name
+            with open(join(srcgen_folder,
+                           "action%s.php" % entity.name.capitalize()), 'w') as f:
+                f.write(template.render(entity=entity))
 
 
 if __name__ == "__main__":
