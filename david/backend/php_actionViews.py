@@ -15,14 +15,6 @@ def php_actionViews(this_folder, debug):
     # Build Person model from person.ent file
     person_model = entity_mm.model_from_file(join(this_folder, 'person.ent'))
 
-    def phptype(s):
-        """
-        Maps type names from PrimitiveType to PHP.
-        """
-        return {
-                'anytype':'anytype',
-        }.get(s.name, s.name)
-
     # Create output folder
     srcgen_folder = join(this_folder, 'srcgen/parts/actions/views')
     if not exists(srcgen_folder):
@@ -35,9 +27,6 @@ def php_actionViews(this_folder, debug):
         loader=jinja2.FileSystemLoader(this_folder),
         trim_blocks=True,
         lstrip_blocks=True)
-
-    # Register filter for mapping Entity type names to Java type names.
-    jinja_env.filters['phptype'] = phptype
 
     # Load Java template
     template = jinja_env.get_template('backend/templates/php_actionViews.template')
