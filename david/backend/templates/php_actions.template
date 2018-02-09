@@ -4,7 +4,7 @@
      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
      $response = curl_exec($curl);
      $data = json_decode($response);
-     ${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} = array();
+     ${% for ser in entity.services %}{% for prop in ser.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} = array();
 
      for ($i=0; $i<=count($data)-1;$i++)
      {

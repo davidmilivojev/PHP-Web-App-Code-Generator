@@ -8,10 +8,10 @@ require_once '/lib/class/Example.php';
 if (!empty($_POST['action']))
 {
 
-   $urlPOST = "http://localhost/appname/services/editname";
+   $urlPOST = "http://localhost/appname/services/editexample";
    $curl_post_data = array(
      'id' => $_POST['id'],
-          'Name' => $_POST['Name'],           'Description' => $_POST['Description']        );
+          'Name' => $_POST['Name'],           'Description' => $_POST['Description'],         'Exampletwo' => $_POST['Exampletwo']        );
    $curl = curl_init($urlPOST);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
    curl_setopt($curl, CURLOPT_POST, true);
@@ -24,7 +24,7 @@ if (!empty($_POST['action']))
 if (!empty($_GET['id']))
 {
    $id = $_GET['id']; // iz url adrese edit.php?id=XXX
-   $urlGet = "http://localhost/appname/services/name/?idExample=".$id;
+   $urlGet = "http://localhost/appname/services/example/?idExample=".$id;
    $curl = curl_init($urlGet);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
    $response = curl_exec($curl);
@@ -79,6 +79,7 @@ else header('Location: controlPanelExample.php');
               <td valign="top">Description:</td>
               <td><textarea name="Description" cols="30" rows="5" required oninvalid="setCustomValidity('Unesite opis konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}"><?php echo $example->get_description(); ?></textarea></td>
             </tr>
+            <?php  require_once "parts/actions/edit/actionExampletwoEdit.php"; ?>
             <tr>
             <td colspan="2" align="center">
             <input type="hidden" name="action" value="edit" >

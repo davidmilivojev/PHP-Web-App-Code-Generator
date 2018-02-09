@@ -1,22 +1,22 @@
 <?php
 
 if(!isset($_SESSION)) session_start();
-if (!isset($_SESSION["username"])) header('Location: indexExample.php');
+if (!isset($_SESSION["username"])) header('Location: indexExamplethree.php');
 
-require_once '/lib/class/Example.php';
+require_once '/lib/class/Examplethree.php';
 
 if (!empty($_POST['action']))
 {
 
-   $urlPOST = "http://localhost/appname/services/addexample";
+   $urlPOST = "http://localhost/appname/services/addexamplethree";
    $curl_post_data = array(
-        'Name' => $_POST['Name'],         'Description' => $_POST['Description'],         'Exampletwo' => $_POST['Exampletwo']    );
+        'Namethree' => $_POST['Namethree'],         'Datethree' => $_POST['Datethree']." ".$_POST['DatethreeVreme'].":00",         'Dateendthree' => $_POST['Dateendthree']." ".$_POST['DateendthreeVreme'].":00",         'Exampletwo' => $_POST['Exampletwo']    );
    $curl = curl_init($urlPOST);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
    curl_setopt($curl, CURLOPT_POST, true);
    curl_setopt($curl, CURLOPT_POSTFIELDS, $curl_post_data);
    $response = curl_exec($curl);
-   if ($response) header('Location: /appname/controlPanelExample.php');
+   if ($response) header('Location: /appname/controlPanelExamplethree.php');
 
 }
 
@@ -49,18 +49,28 @@ if (!empty($_POST['action']))
         </div>
     </header>
   <img class="banner" src="images/banner.svg" alt="">
-  <h1>Kreiranje Example</h1>
+  <h1>Kreiranje Examplethree</h1>
   <div class="wrapper">
       <div class="content">
-          <form name="konf"method="post" action="createExample.php">
+          <form name="konf"method="post" action="createExamplethree.php">
           <table>
             <tr>
-              <td>Name:</td>
-              <td><input type="text" alt="inp" size="40" name="Name" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
+              <td>Namethree:</td>
+              <td><input type="text" alt="inp" size="40" name="Namethree" required oninvalid="setCustomValidity('Unesite naziv konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}" /></td>
             </tr>
             <tr>
-              <td valign="top">Description:</td>
-              <td><textarea name="Description" cols="30" rows="5" required oninvalid="setCustomValidity('Unesite opis konferencije... ')" onchange="try{setCustomValidity('')}catch(e){}"></textarea></td>
+              <td>Datethree:</td>
+              <td>
+                <input type="date" name="Datethree">
+                <input type="time" name="DatethreeVreme">
+              </td>
+            </tr>
+            <tr>
+              <td>Dateendthree:</td>
+              <td>
+                <input type="date" name="Dateendthree">
+                <input type="time" name="DateendthreeVreme">
+              </td>
             </tr>
             <?php  include ('parts/actions/views/actionExampletwoViews.php'); ?>
             <tr>

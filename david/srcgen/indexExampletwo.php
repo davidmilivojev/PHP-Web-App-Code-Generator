@@ -1,22 +1,22 @@
 <?php
-require_once '/lib/class/Example.php';
+require_once '/lib/class/Exampletwo.php';
 
 $targetURL;
-if (!empty($_GET["search"])) $targetURL = "http://localhost/appname/services/searchexample/?search=".$_GET["search"];
-else $targetURL = "http://localhost/appname/services/examples";
+if (!empty($_GET["search"])) $targetURL = "http://localhost/appname/services/searchexampletwo/?search=".$_GET["search"];
+else $targetURL = "http://localhost/appname/services/exampletwos";
 
 $curl = curl_init($targetURL);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($curl);
 $data = json_decode($response);
 
-$examples = array();
+$exampletwos = array();
 
 for ($i=0; $i<=count($data)-1;$i++)
 {
-    $example = new Example();
-    $example->jsonDeserialize($data[$i]);
-    array_push($examples, $example);
+    $exampletwo = new Exampletwo();
+    $exampletwo->jsonDeserialize($data[$i]);
+    array_push($exampletwos, $exampletwo);
 }
 
 ?>
@@ -48,16 +48,20 @@ for ($i=0; $i<=count($data)-1;$i++)
         </div>
       </header>
     <img class="banner" src="images/banner.svg" alt="">
-    <h1>Lista Example</h1>
+    <h1>Lista Exampletwo</h1>
     <div class="wrapper">
       <div class="content">
-        	<?php foreach($examples as $k): ?>
+        	<?php foreach($exampletwos as $k): ?>
             <div class="index-items">
               <div class="index-item-header">
               </div>
-              <h2>Name: <?php echo $k->get_name(); ?></h2>
-              <p>Description: <?php echo $k->get_description(); ?></p>
-              <p>Exampletwo: <?php echo $k->get_exampletwo()->get_nametwo(); ?></p>
+              <h2>Nametwo: <?php echo $k->get_nametwo(); ?></h2>
+              <p>Datetwo: <?php
+                $time = strtotime($k->get_datetwo());
+                $myFormatForView = date("d.m.Y.", $time)." u ". date("G:i",$time)."h";
+                echo $myFormatForView; ?>
+              </p>
+              <p>Descriptiontwo: <?php echo $k->get_descriptiontwo(); ?></p>
             </div>
           <?php endforeach; ?>
       </div>

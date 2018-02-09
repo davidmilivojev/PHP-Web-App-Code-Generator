@@ -7,11 +7,11 @@
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($curl);
     $data = json_decode($response);
-    $names = array();
+    $examples = array();
 
     $example = new Korisnik();
     $example->jsonDeserialize($data[0]);
-    array_push($names, $example);
+    array_push($examples, $example);
 ?>
 <!DOCTYPE html>
 <html>
@@ -48,10 +48,10 @@
           </div>
         <?php
           echo "<h2>Korisnik: ";
-          echo $names[0]->get_username();
+          echo $examples[0]->get_username();
           echo "</h2>";
           echo "<h2>E-mail: ";
-          echo $names[0]->get_email();
+          echo $examples[0]->get_email();
           echo "</h2>";
         ?>
         </div>

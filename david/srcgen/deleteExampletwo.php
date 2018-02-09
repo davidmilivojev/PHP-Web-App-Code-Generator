@@ -1,9 +1,9 @@
 <?php
 
 if(!isset($_SESSION)) session_start();
-if (!isset($_SESSION["username"])) header('Location: indexExample.php');
+if (!isset($_SESSION["username"])) header('Location: indexExampletwo.php');
 
-$urlPOST = "http://localhost/appname/services/delexample";
+$urlPOST = "http://localhost/appname/services/delexampletwo";
    $curl_post_data = array(
         'id' => $_POST['id']
         );
@@ -12,6 +12,6 @@ $urlPOST = "http://localhost/appname/services/delexample";
    curl_setopt($curl, CURLOPT_POST, true);
    curl_setopt($curl, CURLOPT_POSTFIELDS, $curl_post_data);
    $response = curl_exec($curl);
-   if ($response) header('Location: /appname/controlPanelExample.php');
+   if ($response) header('Location: /appname/controlPanelExampletwo.php');
 
 ?>

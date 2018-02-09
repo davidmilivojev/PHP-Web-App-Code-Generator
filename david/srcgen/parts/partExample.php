@@ -8,6 +8,9 @@
         echo "<p>Description:";
         echo $example->get_description();
         echo "</p>";
+        echo "<p>Exampletwo:";
+        if ($example->get_exampletwo()!=NULL) echo $example->get_exampletwo()->get_nametwo();
+        echo "</p>";
         echo "</div>";
       }
 ?>

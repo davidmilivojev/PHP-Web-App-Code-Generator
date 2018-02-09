@@ -1,6 +1,7 @@
 <?php
 require_once '../lib/class/Example.php';
 require_once '../lib/DAL/DAL.php';
+require_once '../lib/DAL/ExampletwoDAL.php';
 require_once '../lib/DAL/CommonDatabaseMethods.php';
 
 class ExampleDAL extends DAL implements CommonDatabaseMethods
@@ -11,7 +12,7 @@ class ExampleDAL extends DAL implements CommonDatabaseMethods
   }
 
 
-  function search($search){
+  function searchex($search){
 
     $tempExample = new Example();
     $tempExample->set_name($search);
@@ -31,6 +32,8 @@ class ExampleDAL extends DAL implements CommonDatabaseMethods
         $exampleResult->set_name($k->Name);
         $exampleResult->set_description($k->Description);
 
+        $exampletwoDAL = new ExampletwoDAL();
+        $exampleResult->set_exampletwo($exampletwoDAL->GetOne($k->Exampletwo));
         $exampleResults[] = $exampleResult;
     }
 
@@ -44,8 +47,8 @@ class ExampleDAL extends DAL implements CommonDatabaseMethods
 
     $object->ValidateFields();
 
-    $sqlQuery="INSERT INTO Example(Name, Description) VALUES(:name, :description)";
-    $params = array(":name"=>$object->get_name(), ":description"=>$object->get_description());
+    $sqlQuery="INSERT INTO Example(Name, Description, Exampletwo) VALUES(:name, :description, :exampletwo)";
+    $params = array(":name"=>$object->get_name(), ":description"=>$object->get_description(), ":exampletwo"=>$object->get_exampletwo()->get_idExampletwo());
     return $this->IzvrsiUpit($sqlQuery, $params);
 
   }
@@ -62,8 +65,8 @@ class ExampleDAL extends DAL implements CommonDatabaseMethods
   public function EditOne($object){
     $object->ValidateFields();
 
-    $sqlQuery="UPDATE Example SET Name = :name, Description = :description WHERE idExample = :idExample";
-    $params = array(":idExample"=>$object->get_idExample(),":name"=>$object->get_name(),":description"=>$object->get_description());
+    $sqlQuery="UPDATE Example SET Name = :name, Description = :description, Exampletwo = :exampletwo WHERE idExample = :idExample";
+    $params = array(":idExample"=>$object->get_idExample(),":name"=>$object->get_name(),":description"=>$object->get_description(),":exampletwo"=>$object->get_exampletwo()->get_idExampletwo());
     return $this->IzvrsiUpit($sqlQuery, $params);
   }
 
@@ -82,6 +85,8 @@ class ExampleDAL extends DAL implements CommonDatabaseMethods
         $exampleResult->set_name($k->Name);
         $exampleResult->set_description($k->Description);
 
+        $exampletwoDAL = new ExampletwoDAL();
+        $exampleResult->set_exampletwo($exampletwoDAL->GetOne($k->Exampletwo));
         $exampleResults[] = $exampleResult;
     }
 
@@ -108,6 +113,8 @@ class ExampleDAL extends DAL implements CommonDatabaseMethods
         $exampleResult->set_name($k->Name);
         $exampleResult->set_description($k->Description);
 
+        $exampletwoDAL = new ExampletwoDAL();
+        $exampleResult->set_exampletwo($exampletwoDAL->GetOne($k->Exampletwo));
     }
 
     return $exampleResult;
