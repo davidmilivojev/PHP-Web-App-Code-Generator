@@ -8,7 +8,7 @@
 
      for ($i=0; $i<=count($data)-1;$i++)
      {
-         $filter{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} = new {% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|capitalize}}{% endif %}{% endfor %}{% endfor %}();
+         $filter{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %} = new {{entity.name|capitalize}}();
          $filter{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}->jsonDeserialize($data[$i]);
          array_push(${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.ga %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}, $filter{% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %});
      }

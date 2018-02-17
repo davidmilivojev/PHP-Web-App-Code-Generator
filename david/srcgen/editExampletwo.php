@@ -24,7 +24,7 @@ if (!empty($_POST['action']))
 if (!empty($_GET['id']))
 {
    $id = $_GET['id']; // iz url adrese edit.php?id=XXX
-   $urlGet = "http://localhost/appname/services/exampletwo/?idExampletwo=".$id;
+   $urlGet = "http://localhost/appname/services/exampletwoone/?idExampletwo=".$id;
    $curl = curl_init($urlGet);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
    $response = curl_exec($curl);

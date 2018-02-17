@@ -5,19 +5,19 @@
         {% for ent in entity.properties %}
         {% if ent.title and  not ent.key and not ent.addlink and not ent.types.date %}
         echo "<h2>{{ent.name|capitalize}}:";
-        echo ${{entity.name|lower}}->get_{{ent.name|lower}}();
+        echo ${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}->get_{{ent.name|lower}}();
         echo "</h2>";
           {% endif %}
         {% if not ent.title and not ent.key and not ent.addlink and not ent.types.date %}
         echo "<p>{{ent.name|capitalize}}:";
-        echo ${{entity.name|lower}}->get_{{ent.name|lower}}();
+        echo ${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}->get_{{ent.name|lower}}();
         echo "</p>";
           {% endif %}
         {% endfor %}
         {% for ent in entity.properties %}
         {% if ent.addlink %}
         echo "<p>{{ent.linkname.name|capitalize}}:";
-        if (${{entity.name|lower}}->get_{{ent.linkname.name|lower}}()!=NULL) echo ${{entity.name|lower}}->get_{{ent.linkname.name|lower}}()->get_{{ent.showby.name}}();
+        if (${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}->get_{{ent.linkname.name|lower}}()!=NULL) echo ${% for ent in entity.services %}{% for prop in ent.actions %}{% if prop.meths.go %}{{prop.name|lower}}{% endif %}{% endfor %}{% endfor %}->get_{{ent.linkname.name|lower}}()->get_{{ent.showby.name}}();
         echo "</p>";
         {% endif %}
         {% endfor %}

@@ -10,7 +10,7 @@ WebApp appname[
       description : desc = 20
       +Exampletwo <idExampletwo> nametwo
       #actions[
-       @example : view
+       @exampleone : view
        @examples : views
        @addexample : create
        @delexample : delete
@@ -25,7 +25,7 @@ WebApp appname[
       datetwo : date =
       descriptiontwo : desc = 20
       #actions[
-       @exampletwo : view
+       @exampletwoone : view
        @exampletwos : views
        @addexampletwo : create
        @delexampletwo : delete
@@ -41,7 +41,7 @@ WebApp appname[
       >dateendthree : date =
       +Exampletwo <idExampletwo> nametwo
       #actions[
-       @examplethree : view
+       @examplethreeone : view
        @examplethrees : views
        @addexamplethree : create
        @delexamplethree : delete

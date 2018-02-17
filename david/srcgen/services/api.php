@@ -237,7 +237,7 @@
                 $this->response($this->json($searchexthree), 200);
             }
 
-            private function example() {
+            private function exampleone() {
 
                 if ($this->get_request_method() != "GET") {
                     $this->response('false', 406);
@@ -253,7 +253,7 @@
                 }
                 $this->response('false', 204);
             }
-            private function exampletwo() {
+            private function exampletwoone() {
 
                 if ($this->get_request_method() != "GET") {
                     $this->response('false', 406);
@@ -269,7 +269,7 @@
                 }
                 $this->response('false', 204);
             }
-            private function examplethree() {
+            private function examplethreeone() {
 
                 if ($this->get_request_method() != "GET") {
                     $this->response('false', 406);

@@ -8,9 +8,9 @@
 
      for ($i=0; $i<=count($data)-1;$i++)
      {
-         $filterexamplethree = new Examplethree();
-         $filterexamplethree->jsonDeserialize($data[$i]);
-         array_push($examplethrees, $filterexamplethree);
+         $filterexamplethreeone = new Examplethree();
+         $filterexamplethreeone->jsonDeserialize($data[$i]);
+         array_push($examplethrees, $filterexamplethreeone);
      }
 
      foreach($examplethrees as $k):
