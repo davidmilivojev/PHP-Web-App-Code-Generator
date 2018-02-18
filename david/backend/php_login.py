@@ -28,15 +28,13 @@ def php_login(this_folder, debug):
         trim_blocks=True,
         lstrip_blocks=True)
 
-    # Register filter for mapping Entity type names to Java type names.
-
-
     # Load Java template
     template = jinja_env.get_template('backend/templates/php_login.template')
     for entity in person_model.classes:
-            with open(join(srcgen_folder,
-                           "%s.php" % 'login'), 'w') as f:
-                f.write(template.render(entity=entity))
+        entity._model_name = person_model.name
+        with open(join(srcgen_folder,
+                       "%s.php" % 'login'), 'w') as f:
+            f.write(template.render(entity=entity))
 
 
 if __name__ == "__main__":

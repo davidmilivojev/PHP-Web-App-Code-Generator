@@ -19,15 +19,16 @@ simple example of web app php code generator
 ## Instalation & Run:
 ### Generator:
 - open file 'person.ent' in editor (atom, notepad++, brackets..)
-- write your example
+- write your example (model)
 - from main folder open command window and write commands:
-- To check your website example 1, to generate example 2
+- To check your website example do step 1, to generate example do step 2
  1. textx check entity.tx person.ent
  2. python entity_codegen.py
-- last step is to folder 'srcgen' rename to 'david' and do next 'Generated-App' steps.
+
 ### Generated-App:
-- copy 'david' folder in xampp/htdocs
+- copy 'srcgen' folder in xampp/htdocs
+- rename folder 'srcgen'  to your model name, for example: 'WebApp ThisIsAppAndFolderName', folder name will be 'ThisIsAppAndFolderName'.
 - run xampp and press start 'Apache' and 'MySQL'
-- type in browser http://localhost/david/createdatabase.php
-- type in browser http://localhost/david/index.php
+- type in browser http://localhost/FOLDERNAME/createdatabase.php
+- type in browser http://localhost/FOLDERNAME/index.php
 

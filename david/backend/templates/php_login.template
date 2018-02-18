@@ -2,7 +2,7 @@
 
 if (!empty($_POST['username']) && !empty($_POST['password']))
 {
-   $urlPOST = "http://localhost/david/services/login";
+   $urlPOST = "http://localhost/{{entity._model_name}}/services/login";
    $curl_post_data = array(
         'username' => $_POST['username'],
         'password' => $_POST['password'],
@@ -40,7 +40,7 @@ if (!empty($_POST['username']) && !empty($_POST['password']))
 <html>
   <head>
     <meta charset="utf-8">
-    <title>david</title>
+    <title>{{entity._model_name}}</title>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>

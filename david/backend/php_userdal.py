@@ -28,9 +28,6 @@ def php_userdal(this_folder, debug):
         trim_blocks=True,
         lstrip_blocks=True)
 
-    # Register filter for mapping Entity type names to Java type names.
-
-
     # Load Java template
     template = jinja_env.get_template('backend/templates/php_userdal.template')
     for entity in person_model.classes:

@@ -28,10 +28,9 @@ def php_createdb(this_folder, debug):
         trim_blocks=True,
         lstrip_blocks=True)
 
-    # Register filter for mapping Entity type names to Java type names.
-
 
     template = jinja_env.get_template('backend/templates/php_createdb.template')
+    
     for db in person_model.classes:
         if db.name:
             with open(join(srcgen_folder,

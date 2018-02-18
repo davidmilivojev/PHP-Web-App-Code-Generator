@@ -1,20 +1,52 @@
 
-WebApp Example[
+WebApp appname[
   "this is example"
 
   class +db databasename{
 
-    entity Example {
+    entity Example !m {
       $key idExample =
       ^name : input = 55
       description : desc = 20
+      +Exampletwo <idExampletwo> nametwo
       #actions[
-       @name : views
-       @names : view
-       @addname : create
-       @delname : delete
-       @editname : edit
-       @searchnames : !search
+       @exampleone : view
+       @examples : views
+       @addexample : create
+       @delexample : delete
+       @editexample : edit
+       @searchexample: !searchex
+      ]
+    }
+
+    entity Exampletwo  {
+      $key idExampletwo =
+      ^nametwo : input = 55
+      datetwo : date =
+      descriptiontwo : desc = 20
+      #actions[
+       @exampletwoone : view
+       @exampletwos : views
+       @addexampletwo : create
+       @delexampletwo : delete
+       @editexampletwo : edit
+       @searchexampletwo : !searchtextwo
+      ]
+    }
+
+    entity Examplethree !d {
+      $key idtr =
+      ^namethree : input = 55
+      datethree : date =
+      >dateendthree : date =
+      +Exampletwo <idExampletwo> nametwo
+      #actions[
+       @examplethreeone : view
+       @examplethrees : views
+       @addexamplethree : create
+       @delexamplethree : delete
+       @editexamplethree : edit
+       @searchexthree : !searchtextr
       ]
     }
   }

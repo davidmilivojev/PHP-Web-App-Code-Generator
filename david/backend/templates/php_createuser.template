@@ -2,7 +2,7 @@
 
 if (!empty($_POST['username']) && !empty($_POST['password']) && !empty($_POST['email']))
 {
-   $urlPOST = "http://localhost/david/services/kreirajnalog";
+   $urlPOST = "http://localhost/{{entity._model_name}}/services/kreirajnalog";
    $curl_post_data = array(
         'username' => $_POST['username'],
         'password' => $_POST['password'],
@@ -18,7 +18,7 @@ if (!empty($_POST['username']) && !empty($_POST['password']) && !empty($_POST['e
        // create session
        session_start();
        $_SESSION["username"]=$_POST['username'];
-       header('Location: /david/controlPanel{% for ent in entity.entities %}{% if ent.main %}{{ent.name}}{% endif %}{% endfor %}.php');
+       header('Location: /{{entity._model_name}}/controlPanel{% for ent in entity.entities %}{% if ent.main %}{{ent.name}}{% endif %}{% endfor %}.php');
    }
    else header('Location: index{% for ent in entity.entities %}{% if ent.main %}{{ent.name}}{% endif %}{% endfor %}.php');
 }
@@ -29,7 +29,7 @@ if (!empty($_POST['username']) && !empty($_POST['password']) && !empty($_POST['e
 <html>
   <head>
     <meta charset="utf-8">
-    <title>david</title>
+    <title>{{entity._model_name}}</title>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
